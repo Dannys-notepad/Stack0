@@ -1,0 +1,15 @@
+{
+  "name": "stack0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace web\" \"npm run dev --workspace api\"",
+    "build": "npm run build --workspaces"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  }
+}
