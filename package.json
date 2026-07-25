@@ -1,15 +1,23 @@
 {
-  "name": "stack0",
-  "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
+  "name": "@stack0/api",
+  "type": "module",
   "scripts": {
-    "dev": "concurrently \"npm run dev --workspace web\" \"npm run dev --workspace api\"",
-    "build": "npm run build --workspaces"
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js"
+  },
+  "dependencies": {
+    "@hono/node-server": "^2.0.11",
+    "@hono/standard-validator": "^0.3.0",
+    "dotenv": "^17.4.2",
+    "firebase-admin": "^14.2.0",
+    "hono": "^4.12.31",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
-    "concurrently": "^9.0.0"
+    "@types/node": "^26.1.1",
+    "tsx": "^4.23.0",
+    "typescript": "^7.0.2"
   }
 }
+

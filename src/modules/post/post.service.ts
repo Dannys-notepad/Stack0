@@ -1,24 +1,24 @@
-import type { Post } from '@stack0/models'
+import type { Post } from './post.model.ts'
 import * as repo from './post.repository'
 import toSlug from '../../lib/toSlug.ts'
 
 // GET ALL POSTS
 export const getAllPosts = async () => {
+  let message = 'All posts'
+  let status = 200
+  
   try {
     const allPosts = await repo.findAll()
+    const data = allPosts
     
-    if(allPosts.length === 0){
-      return {
-        message: 'No posts yet',
-        data: allPosts,
-        status: 200
-      }
+    if(data.length === 0){
+      message = 'No posts yet'
     }
     
     return {
-      message: 'All posts',
-      data: allPosts,
-      status: 200
+      message,
+      data,
+      status
     }
   } catch (error: any) {
     console.error('Error getting all posts', error)
@@ -86,6 +86,73 @@ export const createPost = async (data: any) => {
       status: 201
     }
   } catch (error: any) {
-    console.log('Error creating post', error)
+    console.error('Error creating post', error)
   }
 }
+
+// UPDATE POST
+export const updatePost = async (slug, data) => {
+  //console.log(slug, data)
+  if(!slug || !data){
+    return {
+      message: 'either slug or data body was not provided',
+      data: null,
+      status: 400
+    }
+  }
+  
+  try {
+    const updated = await repo.update(slug, data)
+    //console.log(updated)
+    if(!updated){
+      return {
+        message: 'post does not exist',
+        data: updated,
+        status: 404
+      }
+    }
+    
+    return {
+      message: 'post updated',
+      data: updated,
+      status: 200
+    }
+    
+  } catch (error) {
+    console.error('Error updating post', error)
+  }
+}
+
+// DELETE POST
+export const deletePost = async (slug) => {
+  if(!slug){
+    return {
+      message: 'slug was not provided in the url',
+      data: null,
+      status: 400
+    }
+  }
+  
+  try {
+    const deleted = await repo.remove(slug)
+    //console.log(deleted)
+    
+    if(!deleted){
+      return {
+        message: 'post does not exist',
+        data: deleted,
+        status: 404
+      }
+    }
+    
+    return {
+      message: 'post deleted',
+      data: deleted,
+      status: 200
+    }
+    
+  } catch (error) {
+    console.error('Error deleting post', error)
+  }
+}
+
