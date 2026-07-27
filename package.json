@@ -11,13 +11,14 @@
     "@hono/standard-validator": "^0.3.0",
     "dotenv": "^17.4.2",
     "firebase-admin": "^14.2.0",
-    "hono": "^4.12.31",
+    "hono": "^4.12.32",
+    "nodemailer": "^9.0.3",
     "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "^26.1.1",
+    "@types/nodemailer": "^8.0.1",
     "tsx": "^4.23.0",
     "typescript": "^7.0.2"
   }
 }
-

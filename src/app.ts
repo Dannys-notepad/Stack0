@@ -1,9 +1,11 @@
 import { Hono } from 'hono'
 import postRoutes from './modules/post/post.route.ts'
+import newsletterRoutes from './modules/newsletter/newsletter.route.ts'
 
-const app: any = new Hono()
+const app = new Hono()
 
-app.route('/posts', postRoutes)
+app.route('/api/posts', postRoutes)
+app.route('/api/newsletter', newsletterRoutes)
 
 app.get('/', (c) => {
   return c.json({ message: 'Server is running' })

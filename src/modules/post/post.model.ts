@@ -3,6 +3,28 @@ export type Post = {
   title: string
   content: string
   excerpt: string
+
+  tag: string
+
+  metaTitle?: string
+  metaDescription?: string
+
+  status: "draft" | "published"
+
+  views: number
+  readingTime: number
+
+  createdAt: string
+  updatedAt: string
+}
+
+// FOR FUTURE IMPLEMENTATIONS
+/*
+export type Post = {
+  slug: string
+  title: string
+  content: string
+  excerpt: string
   coverImage?: string
 
   tags: string[]
@@ -25,4 +47,4 @@ export type Post = {
 
   createdAt: string
   updatedAt: string
-}
+}*/

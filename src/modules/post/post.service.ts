@@ -1,6 +1,7 @@
 import type { Post } from './post.model.ts'
 import * as repo from './post.repository'
-import toSlug from '../../lib/toSlug.ts'
+import toSlug from '../../lib/lib.toSlug.ts'
+import mail from '../../lib/lib.mail.ts'
 
 // GET ALL POSTS
 export const getAllPosts = async () => {
@@ -68,21 +69,40 @@ export const createPost = async (data: any) => {
       }
     }
 
-    const excerpt = data.content.slice(0, 140)
     const now = new Date().toISOString()
     const post: Post = {
       ...data,
       slug,
-      excerpt,
       views: 0,
       readingTime: 5,
       createdAt: now,
       updatedAt: now
     }
-    const create = await repo.create(post)
+    const createPost = await repo.create(post)
+    
+    const newsletter = await repo.findAllEmails()
+    let mailSent = 'No subscribed mails to send newsletters yet'
+    if(newsletter.length > 0){
+      const emails = newsletter
+      .filter(e => e.status === 'subscribed')
+      .map(e => e.email)
+    
+      const mailFormat = {
+        subject: 'New Post Alert',
+        text: `New post titled ${post.title} on stack0, check it out`,
+        email: emails
+      }
+      
+      mailSent = await mail(mailFormat) ? 'Newsletter mails sent' : 'Newsletter mails not sent'
+    }
+    
+    
     return {
       message: 'Post created',
-      data: create,
+      data: {
+        createPost,
+        mailSent
+      },
       status: 201
     }
   } catch (error: any) {

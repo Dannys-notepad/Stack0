@@ -1,6 +1,19 @@
 import { db } from '../../config/firebase.ts'
 import type { Post } from './post.model.ts'
 
+// FIND ALL EMAILS
+export const findAllEmails = async () => {
+  try {
+    const snapshot = await db.collection("newsletter").get()
+
+    return snapshot.docs.map(doc => doc.data())
+
+  } catch (error) {
+    console.error("Error finding all emails", error)
+    throw error
+  }
+}
+
 // FIND ALL POSTS
 export const findAll = async () => {
   try {
