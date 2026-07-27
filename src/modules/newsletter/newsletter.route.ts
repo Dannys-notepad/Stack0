@@ -1,9 +1,13 @@
 import { Hono } from 'hono'
 import * as controller from './newsletter.controller.ts'
 
+// This router handles newsletter subscription actions.
 const app = new Hono()
 
-app.post('/:email/subscribe', controller.subscribeEmail)
-app.patch('/:email/unsubscribe', controller.unsubscribeEmail)
+// Subscribe a new email address.
+app.post('/:email/subscribe', controller.handleSubscribeEmailAddress)
+
+// Unsubscribe an existing email address.
+app.patch('/:email/unsubscribe', controller.handleUnsubscribeEmailAddress)
 
 export default app
