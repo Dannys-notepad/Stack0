@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="refresh" content="60">
+<title>Down for maintenance · Stack0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/global.css">
+<script src="js/global.js" defer></script>
+</head>
+<body id="top">
+
+<div class="top-bar">
+  <div class="top-bar-inner">
+    <div class="site-title">Stack0.</div>
+    <span class="status-indicator">
+      <span class="status-dot"></span>
+      <span>Undergoing maintenance</span>
+    </span>
+  </div>
+</div>
+
+<div class="page-frame">
+  <span class="cross-marker" id="crossMarker"></span>
+
+  <main class="error-main">
+    <div class="error-glyph-wrap">
+      <svg class="error-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M14.7 6.3a1 1 0 0 0 1.4 0l1.6-1.6a5 5 0 0 1 1.4 4.5l-3.2 3.2"/>
+        <path d="M6.3 9.3a1 1 0 0 0 0 1.4l1.6 1.6"/>
+        <path d="M9.3 6.3L4.6 11a5 5 0 0 0 6 6l4.7-4.7"/>
+        <path d="M9 15l-4.5 4.5"/>
+      </svg>
+    </div>
+    <p class="error-eyebrow">Error 503 · Service unavailable</p>
+    <h1 class="error-code">503</h1>
+    <h2 class="error-title">Back shortly</h2>
+    <p class="error-desc">Stack0 is offline for scheduled maintenance — nothing to worry about, we're just tightening a few bolts. This page will refresh itself, or check back in a few minutes.</p>
+
+    <div class="retry-panel">
+      <div class="retry-row">
+        <span class="retry-label">Retrying automatically in</span>
+        <span class="retry-count" id="retryCount">60s</span>
+      </div>
+      <div class="retry-bar-track"><div class="retry-bar-fill" id="retryBarFill"></div></div>
+    </div>
+
+    <div class="error-actions">
+      <button type="button" class="btn btn-accent" id="retryNowBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.5 9a9 9 0 0 1 14.9-3.4L23 10"/><path d="M20.5 15a9 9 0 0 1-14.9 3.4L1 14"/></svg>
+        Try again now
+      </button>
+      <a class="btn btn-ghost" href="https://status.stack0.dev" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 2"/></svg>
+        View status page
+      </a>
+    </div>
+
+    <nav class="error-links">
+      <a href="mailto:hello@stack0.dev">Contact</a>
+      <a href="https://status.stack0.dev" target="_blank" rel="noopener">Status page</a>
+    </nav>
+  </main>
+
+  <footer>
+    <div>© 2026 Etim Daniel Udeme</div>
+  </footer>
+</div>
+
+</body>
+</html>

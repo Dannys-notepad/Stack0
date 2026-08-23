@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stack0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/global.css">
+<script src="js/global.js" defer></script>
+</head>
+<body id="top">
+
+<!-- ===== Header / TopBar (component: Header.astro — props: siteTitle, navLinks) ===== -->
+<div class="top-bar">
+  <div class="top-bar-inner">
+    <div class="site-title"><a href="#top">Stack0.</a></div>
+
+    <div class="hamburger-wrap" id="hamburgerWrap">
+      <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="hamburger-dropdown">
+        <div class="dropdown-col">
+          <a class="dropdown-search" href="/search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            Search
+          </a>
+        </div>
+        <div class="dropdown-col">
+          <div class="dropdown-label">Writing</div>
+          <a href="/archives">Archives</a>
+          <a href="/tags">Tags</a>
+        </div>
+        <div class="dropdown-col">
+          <div class="dropdown-label">More</div>
+          <a href="/about">About</a>
+          <a href="/appearances">Appearances</a>
+        </div>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<div class="page-frame">
+  <span class="cross-marker" id="crossMarker"></span>
+
+  <!-- ===== Hero (component: Hero.astro — props: avatarSrc, name, tagline, socialLinks[]) ===== -->
+  <header class="site-header">
+    <img class="hero-cover" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Crect width='280' height='280' fill='%23161616'/%3E%3Ctext x='50%25' y='50%25' fill='%235f5f5f' font-family='monospace' font-size='14' text-anchor='middle' dominant-baseline='middle' letter-spacing='1'%3EAVATAR%3C/text%3E%3C/svg%3E" width="140" height="140" alt="Profile photo">
+    <!-- Swap the src above for your own square photo (e.g. avatar.jpg) — the circle crop comes from .hero-cover's border-radius:50%, so any square/near-square image will work. -->
+
+    <h1 class="hero">Hi, I'm Daniel.</h1>
+    <p class="tagline">A roving amateur fumbling through software, systems, and a 2nd year Industrial Chemistry student.</p>
+    <div class="social-links">
+      <a href="mailto:hello@stack0.dev" aria-label="Email" title="Email">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 6l10 7 10-7"/></svg>
+      </a>
+      <a href="#" aria-label="X" title="X">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.6 8.7L23.3 22H16.9l-5-6.6-5.7 6.6H2.1l8.1-9.3L1.5 2h6.6l4.5 6.1L18.9 2Zm-1.1 18h1.7L7.3 3.9H5.5L17.8 20Z"/></svg>
+      </a>
+      <a href="#" aria-label="GitHub" title="GitHub">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.6 2 12.2c0 4.5 2.9 8.3 6.8 9.6.5.1.7-.2.7-.5v-1.9c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .9.1-.7.4-1.1.6-1.4-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.4.1-2.8 0 0 .8-.3 2.7 1a9 9 0 0 1 4.9 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.8.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7 1 .7 2v3c0 .3.2.6.7.5 3.9-1.3 6.8-5.1 6.8-9.6C22 6.6 17.5 2 12 2Z"/></svg>
+      </a>
+      <a href="#" aria-label="RSS" title="RSS">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="5" cy="19" r="1.5" fill="currentColor" stroke="none"/><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===== FeaturedPost (component: FeaturedPost.astro — props: href, tag, title, desc, date, views, readTime) ===== -->
+    <a class="featured-post" href="#">
+      <div class="featured-eyebrow">
+        <span class="featured-dot"></span> Latest post
+      </div>
+      <h3 class="featured-title">GC shape stenciling in Go generics</h3>
+      <p class="featured-desc">Generic functions in Go don't get a fresh compiled body for every type you plug in. The compiler buckets types by their "GC shape" — how the garbage collector needs to see them in memory — and lets every type in a bucket share one function body, resolving the type-specific bits through a dictionary passed in at the call site. This piece walks through why that tradeoff exists, what a GC shape actually groups together, and where the dictionary lookups show up if you go looking for them.</p>
+      <div class="featured-meta">
+        <span>July 11, 2026</span><span class="dot">·</span>
+        <span class="tag">Go</span><span class="dot">·</span>
+        <span class="meta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          2,140
+        </span><span class="dot">·</span>
+        <span class="meta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          6 min read
+        </span>
+      </div>
+      <span class="featured-cta">Read the post <span class="arrow">→</span></span>
+    </a>
+
+    <h2 class="section-title">More writing</h2>
+
+    <!--
+      ===== PostCard (component: PostCard.astro) =====
+      Repeated for every post. Props: href, date, tag, views, readTime, title, desc.
+      In Astro: {posts.map(post => <PostCard {...post} />)}
+      Markup below is one instance — copy the <article class="post"> block per post,
+      or lift it into PostCard.astro and loop over a posts collection.
+    -->
+    <article class="post">
+      <div class="post-meta">
+        <span>July 4, 2026</span><span class="dot">·</span>
+        <span class="tag">Go</span><span class="dot">·</span>
+        <span class="meta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          1,872
+        </span><span class="dot">·</span>
+        <span class="meta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          8 min read
+        </span>
+      </div>
+      <a class="post-title" href="#">Modernizers &amp; go fix</a>
+      <p class="post-desc">Go 1.26 reworked go fix on top of the analysis framework, so it modernizes code in line with the Go version declared in your module. A tour of the modernizers, the wider x/tools ecosystem, and the limits of //go:fix inline.</p>
+    </article>
+
+    <article class="post">
+      <div class="post-meta">
+        <span>June 27, 2026</span><span class="dot">·</span>
+        <span class="tag">Go</span><span class="dot">·</span>
+        <span class="meta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          3,015
+        </span><span class="dot">·</span>
+        <span class="meta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          5 min read
+        </span>
+      </div>
+      <a class="post-title" href="#">Request coalescing with Go singleflight</a>
+      <p class="post-desc">When a hot cache key expires, dozens of requests can hammer the database with the same query at once. The singleflight package folds duplicate calls into a single in-flight request — how to wire it up and confirm it's actually helping.</p>
+    </article>
+
+    <article class="post">
+      <div class="post-meta">
+        <span>June 21, 2026</span><span class="dot">·</span>
+        <span class="tag">Go</span><span class="dot">·</span>
+        <span class="meta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          1,504
+        </span><span class="dot">·</span>
+        <span class="meta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          4 min read
+        </span>
+      </div>
+      <a class="post-title" href="#">Channel iteration and goroutine leak</a>
+      <p class="post-desc">Ranging over a channel that never closes leaves the receiving goroutine stuck forever. Why a bounded number of receives is safe while a range isn't, and how Go 1.27's leak profile helps catch it.</p>
+    </article>
+
+    <article class="post">
+      <div class="post-meta">
+        <span>June 18, 2026</span><span class="dot">·</span>
+        <span class="tag">Shards</span><span class="dot">·</span>
+        <span class="meta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          981
+        </span><span class="dot">·</span>
+        <span class="meta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          3 min read
+        </span>
+      </div>
+      <a class="post-title" href="#">Accepted proposal: a goroutine leak profile in the Go standard library</a>
+      <p class="post-desc">Notes on the newly accepted goroutine leak profile proposal and how it piggybacks on the garbage collector to detect leaks.</p>
+    </article>
+
+    <article class="post">
+      <div class="post-meta">
+        <span>June 13, 2026</span><span class="dot">·</span>
+        <span class="tag">System</span><span class="dot">·</span>
+        <span class="meta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          2,687
+        </span><span class="dot">·</span>
+        <span class="meta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          7 min read
+        </span>
+      </div>
+      <a class="post-title" href="#">Reading your own writes with WAIT FOR LSN in Postgres 19</a>
+      <p class="post-desc">Postgres 19 adds a WAIT FOR LSN command that lets a replica pause until it has caught up to a given write. What read-after-write problem it fixes, the older workarounds it replaces, and how its timeout, status, and mode options behave.</p>
+    </article>
+
+    <article class="post">
+      <div class="post-meta">
+        <span>June 12, 2026</span><span class="dot">·</span>
+        <span class="tag">Misc</span><span class="dot">·</span>
+        <span class="meta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          1,236
+        </span><span class="dot">·</span>
+        <span class="meta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          5 min read
+        </span>
+      </div>
+      <a class="post-title" href="#">Migrating from GNU stow to chezmoi</a>
+      <p class="post-desc">Swapping stow's symlink farm for chezmoi: bootstrapping a Mac in one command, Homebrew packages, macOS settings, a small daily sync loop, and agent skills shared between Claude Code and Codex.</p>
+    </article>
+
+    <article class="post">
+      <div class="post-meta">
+        <span>June 7, 2026</span><span class="dot">·</span>
+        <span class="tag">Misc</span><span class="dot">·</span>
+        <span class="meta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          1,098
+        </span><span class="dot">·</span>
+        <span class="meta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          6 min read
+        </span>
+      </div>
+      <a class="post-title" href="#">Putting this blog on ATProto with standard.site</a>
+      <p class="post-desc">Mirroring a static Hugo blog onto ATProto using standard.site and Sequoia, plus the GitHub Actions setup that republishes records automatically on every push.</p>
+    </article>
+
+    <article class="post">
+      <div class="post-meta">
+        <span>May 30, 2026</span><span class="dot">·</span>
+        <span class="tag">Zephyr</span><span class="dot">·</span>
+        <span class="meta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          3,402
+        </span><span class="dot">·</span>
+        <span class="meta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          4 min read
+        </span>
+      </div>
+      <a class="post-title" href="#">If you won't carry the pager, maybe don't push to mainline</a>
+      <p class="post-desc">Drive-by AI-assisted changes can quietly break the shared mental model a team builds around its code, leaving ICs to clean up. An argument for pairing write access to mainline with pager duty.</p>
+    </article>
+
+    <article class="post">
+      <div class="post-meta">
+        <span>May 18, 2026</span><span class="dot">·</span>
+        <span class="tag">Go</span><span class="dot">·</span>
+        <span class="meta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          892
+        </span><span class="dot">·</span>
+        <span class="meta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          6 min read
+        </span>
+      </div>
+      <a class="post-title" href="#">Testing Go CLIs with testscript</a>
+      <p class="post-desc">How cmd/go's own script tests led to the testscript package, and how to use it for CLI tests that check argv, stdout, stderr, exit codes, and scratch files.</p>
+    </article>
+
+    <article class="post">
+      <div class="post-meta">
+        <span>May 10, 2026</span><span class="dot">·</span>
+        <span class="tag">Go</span><span class="dot">·</span>
+        <span class="meta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          1,417
+        </span><span class="dot">·</span>
+        <span class="meta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          5 min read
+        </span>
+      </div>
+      <a class="post-title" href="#">A tour of txtar</a>
+      <p class="post-desc">txtar is the small plain-text archive format Russ Cox created in 2018 for multi-file test fixtures — now used across the Go Playground, cmd/go script tests, gopls marker tests, and rsc.io/rf.</p>
+    </article>
+
+    <article class="post">
+      <div class="post-meta">
+        <span>May 9, 2026</span><span class="dot">·</span>
+        <span class="tag">Go</span><span class="dot">·</span>
+        <span class="meta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          2,209
+        </span><span class="dot">·</span>
+        <span class="meta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          7 min read
+        </span>
+      </div>
+      <a class="post-title" href="#">Type-safe slogging</a>
+      <p class="post-desc">The default slog API is loose enough that a careless call can ship malformed JSON to production. Tightening it up with Attr constructors, LogAttrs, a context-carried logger, and sloglint.</p>
+    </article>
+
+    <article class="post">
+      <div class="post-meta">
+        <span>May 2, 2026</span><span class="dot">·</span>
+        <span class="tag">Go</span><span class="dot">·</span>
+        <span class="meta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          1,653
+        </span><span class="dot">·</span>
+        <span class="meta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          6 min read
+        </span>
+      </div>
+      <a class="post-title" href="#">Hoisting wire plumbing out of your Go handlers</a>
+      <p class="post-desc">Four out of five steps in a typical unary RPC handler are just wiring. Fixing the service function signature lets all of them collapse into one generic adapter per transport.</p>
+    </article>
+
+    <article class="post">
+      <div class="post-meta">
+        <span>April 25, 2026</span><span class="dot">·</span>
+        <span class="tag">Go</span><span class="dot">·</span>
+        <span class="meta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          1,079
+        </span><span class="dot">·</span>
+        <span class="meta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          4 min read
+        </span>
+      </div>
+      <a class="post-title" href="#">Go quirks: function closures capturing mutable references</a>
+      <p class="post-desc">A Go closure keeps a live reference to whatever it captures, not a snapshot in time. Concrete cases where that trips people up, and habits that keep it predictable.</p>
+    </article>
+
+    <article class="post">
+      <div class="post-meta">
+        <span>April 19, 2026</span><span class="dot">·</span>
+        <span class="tag">Shards</span><span class="dot">·</span>
+        <span class="meta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          764
+        </span><span class="dot">·</span>
+        <span class="meta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          3 min read
+        </span>
+      </div>
+      <a class="post-title" href="#">Accepted proposal: UUID in the Go standard library</a>
+      <p class="post-desc">Notes on the recently accepted proposal to bring UUID support into the Go standard library, and the API tradeoffs behind it.</p>
+    </article>
+
+    <div class="pagination">
+      <a href="#">Next →</a>
+    </div>
+  </main>
+
+  <!-- ===== Footer (component: Footer.astro — renders <Newsletter /> as first child) ===== -->
+  <footer>
+    <!-- ===== Newsletter (component: Newsletter.astro) ===== -->
+    <section class="newsletter" aria-labelledby="newsletter-title">
+      <h2 class="newsletter-title" id="newsletter-title">Get new posts by email</h2>
+      <p class="newsletter-desc">Occasional emails when something new goes up. No spam.</p>
+      <form class="newsletter-form" action="/subscribe" method="post">
+        <label for="newsletter-email" class="sr-only">Email address</label>
+        <input type="email" id="newsletter-email" name="email" placeholder="you@example.com" autocomplete="email" required>
+        <button type="submit">Subscribe</button>
+      </form>
+      <p class="newsletter-note">Unsubscribe anytime.</p>
+    </section>
+
+    <div class="footer-links">
+      <a href="#">blogroll</a>
+      <a href="#">maxims</a>
+      <a href="#">tags</a>
+    </div>
+    <div>© 2026 <a href="#">Etim Daniel Udeme</a></div>
+    <a href="#top" id="back-to-top" aria-label="Back to top">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>
+    </a>
+  </footer>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "name": "stack0",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/server.js",
+  "imports": {
+    "#*": "./src/*"
+  },
+  "scripts": {
+    "start": "node ./src/server.js",
+    "dev": "node --watch ./src/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "firebase-admin": "^14.3.0",
+    "helmet": "^8.3.0",
+    "nodemailer": "^9.0.5",
+    "zod": "^4.4.3"
+  }
+}

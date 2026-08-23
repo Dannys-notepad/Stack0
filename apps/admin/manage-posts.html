@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manage posts · Stack0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/global.css">
+<script src="js/global.js" defer></script>
+</head>
+<body id="top">
+
+<!-- ===== Header / TopBar ===== -->
+<div class="top-bar">
+  <div class="top-bar-inner">
+    <div class="site-title"><a href="/">Stack0.</a></div>
+
+    <div class="hamburger-wrap" id="hamburgerWrap">
+      <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="hamburger-dropdown">
+        <div class="dropdown-col">
+          <a class="dropdown-search" href="/search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            Search
+          </a>
+        </div>
+        <div class="dropdown-col">
+          <div class="dropdown-label">Writing</div>
+          <a href="/archives">Archives</a>
+          <a href="/tags">Tags</a>
+        </div>
+        <div class="dropdown-col">
+          <div class="dropdown-label">Admin</div>
+          <a href="/new-post">New post</a>
+          <a href="/manage-posts" class="current">Manage posts</a>
+        </div>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<div class="page-frame">
+  <span class="cross-marker" id="crossMarker"></span>
+
+  <a class="back-link" href="/">← Back to site</a>
+
+  <!-- ===== AdminHeader ===== -->
+  <header class="admin-header">
+    <div>
+      <h1 class="admin-title">Manage posts</h1>
+      <p class="admin-subtitle">Every post in one place — edit, archive, or delete. Archived posts stay saved but drop off the homepage and search.</p>
+    </div>
+    <a class="btn btn-accent" href="/new-post">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+      New post
+    </a>
+  </header>
+
+  <!-- ===== Stat chips ===== -->
+  <div class="stat-row" id="statRow"></div>
+
+  <!-- ===== Toolbar: search + sort + status filter ===== -->
+  <div class="toolbar">
+    <div class="search-box">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <label for="searchInput" class="sr-only">Search posts</label>
+      <input type="text" id="searchInput" placeholder="Search by title or tag…" autocomplete="off">
+    </div>
+    <label for="sortSelect" class="sr-only">Sort posts</label>
+    <select class="sort-select" id="sortSelect">
+      <option value="newest">Newest first</option>
+      <option value="oldest">Oldest first</option>
+      <option value="views">Most viewed</option>
+      <option value="title">Title A–Z</option>
+    </select>
+  </div>
+  <div class="filter-chips" id="filterChips"></div>
+
+  <!-- ===== Bulk action bar ===== -->
+  <div class="bulk-bar" id="bulkBar">
+    <span class="bulk-bar-label" id="bulkLabel">0 selected</span>
+    <div class="bulk-bar-actions">
+      <button type="button" class="btn btn-ghost" id="bulkArchiveBtn">Archive</button>
+      <button type="button" class="btn btn-danger" id="bulkDeleteBtn">Delete</button>
+      <button type="button" class="btn btn-ghost" id="bulkClearBtn">Clear</button>
+    </div>
+  </div>
+
+  <!-- ===== Results meta + select all ===== -->
+  <div class="results-meta">
+    <span class="select-all-wrap">
+      <input type="checkbox" class="checkbox" id="selectAllCheckbox" aria-label="Select all posts">
+      <span id="resultsCount">0 posts</span>
+    </span>
+    <span id="pageInfo"></span>
+  </div>
+
+  <!-- ===== Post list ===== -->
+  <ul class="admin-list" id="adminList"></ul>
+
+  <div class="admin-empty" id="emptyState" style="display:none;">
+    <p class="admin-empty-title">No posts match this view</p>
+    <p>Try a different search term, or clear the status filter.</p>
+  </div>
+
+  <div class="admin-pagination" id="paginationBar"></div>
+
+  <footer>
+    <div class="footer-links">
+      <a href="/">home</a>
+      <a href="/tags">tags</a>
+      <a href="/about">about</a>
+    </div>
+    <div>© 2026 <a href="/">Etim Daniel Udeme</a></div>
+  </footer>
+</div>
+
+<!-- ===== Delete confirmation modal ===== -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
+    <h2 class="modal-title" id="deleteModalTitle">Delete post?</h2>
+    <p class="modal-body" id="deleteModalBody">This will permanently delete <strong>this post</strong>. This can't be undone.</p>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-ghost" id="cancelDeleteBtn">Cancel</button>
+      <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-stack" id="toastStack"></div>
+
+<script>
+  // ===== Demo data — in a real app this comes from your backend/CMS =====
+  var POSTS = [
+    { id: 1, title: "GC shape stenciling in Go generics", desc: "Generic functions in Go don't get a fresh compiled body for every type you plug in — how the compiler buckets types by GC shape.", tag: "Go", date: "2026-07-11", views: 2140, readTime: 6, status: "published" },
+    { id: 2, title: "Modernizers & go fix", desc: "Go 1.26 reworked go fix on top of the analysis framework, modernizing code in line with the declared module version.", tag: "Go", date: "2026-07-04", views: 1872, readTime: 8, status: "published" },
+    { id: 3, title: "Request coalescing with Go singleflight", desc: "The singleflight package folds duplicate in-flight calls into one request — how to wire it up and confirm it helps.", tag: "Go", date: "2026-06-27", views: 3015, readTime: 5, status: "published" },
+    { id: 4, title: "Channel iteration and goroutine leaks", desc: "Ranging over a channel that never closes leaves the receiver stuck forever — and how Go 1.27's leak profile catches it.", tag: "Go", date: "2026-06-21", views: 1504, readTime: 4, status: "draft" },
+    { id: 5, title: "Accepted proposal: a goroutine leak profile", desc: "Notes on the newly accepted goroutine leak profile proposal and how it piggybacks on the garbage collector.", tag: "Shards", date: "2026-06-18", views: 981, readTime: 3, status: "published" },
+    { id: 6, title: "Reading your own writes with WAIT FOR LSN", desc: "Postgres 19 adds a WAIT FOR LSN command letting a replica pause until it catches up to a given write.", tag: "System", date: "2026-06-13", views: 2687, readTime: 7, status: "published" },
+    { id: 7, title: "Migrating from GNU stow to chezmoi", desc: "Swapping stow's symlink farm for chezmoi: bootstrapping, Homebrew, macOS settings, and shared agent skills.", tag: "Misc", date: "2026-06-12", views: 1236, readTime: 5, status: "published" },
+    { id: 8, title: "Putting this blog on ATProto with standard.site", desc: "Mirroring a static Hugo blog onto ATProto, plus the GitHub Actions setup that republishes on every push.", tag: "Misc", date: "2026-06-07", views: 1098, readTime: 6, status: "archived" },
+    { id: 9, title: "If you won't carry the pager, maybe don't push to mainline", desc: "Drive-by AI-assisted changes can quietly break the shared mental model a team builds around its code.", tag: "Zephyr", date: "2026-05-30", views: 3402, readTime: 4, status: "published" },
+    { id: 10, title: "Testing Go CLIs with testscript", desc: "How cmd/go's own script tests led to the testscript package, and how to use it for CLI tests.", tag: "Go", date: "2026-05-18", views: 892, readTime: 6, status: "draft" },
+    { id: 11, title: "A tour of txtar", desc: "txtar is the small plain-text archive format Russ Cox created in 2018 for multi-file test fixtures.", tag: "Go", date: "2026-05-10", views: 1417, readTime: 5, status: "published" },
+    { id: 12, title: "Type-safe slogging", desc: "The default slog API is loose enough that a careless call can ship malformed JSON — tightening it up.", tag: "Go", date: "2026-05-09", views: 1653, readTime: 7, status: "archived" }
+  ];
+
+  (function(){
+    var state = { query: "", status: "all", sort: "newest", page: 1, selected: new Set() };
+    var PAGE_SIZE = 6;
+
+    var statRow = document.getElementById('statRow');
+    var filterChips = document.getElementById('filterChips');
+    var searchInput = document.getElementById('searchInput');
+    var sortSelect = document.getElementById('sortSelect');
+    var bulkBar = document.getElementById('bulkBar');
+    var bulkLabel = document.getElementById('bulkLabel');
+    var selectAllCheckbox = document.getElementById('selectAllCheckbox');
+    var resultsCount = document.getElementById('resultsCount');
+    var pageInfo = document.getElementById('pageInfo');
+    var adminList = document.getElementById('adminList');
+    var emptyState = document.getElementById('emptyState');
+    var paginationBar = document.getElementById('paginationBar');
+    var deleteModal = document.getElementById('deleteModal');
+    var deleteModalBody = document.getElementById('deleteModalBody');
+    var toastStack = document.getElementById('toastStack');
+    var pendingDelete = null; // { ids: [...] }
+
+    var STATUS_LABELS = { all: "All", published: "Published", draft: "Drafts", archived: "Archived" };
+
+    function escapeHtml(s){
+      return String(s).replace(/[&<>]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]; });
+    }
+    function formatDate(iso){
+      var d = new Date(iso + "T00:00:00");
+      return d.toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' });
+    }
+    function formatViews(n){
+      return n >= 1000 ? (n/1000).toFixed(n % 1000 === 0 ? 0 : 1) + 'k' : String(n);
+    }
+
+    function getFiltered(){
+      var q = state.query.trim().toLowerCase();
+      return POSTS.filter(function(p){
+        if(state.status !== 'all' && p.status !== state.status) return false;
+        if(!q) return true;
+        return p.title.toLowerCase().indexOf(q) !== -1 || p.tag.toLowerCase().indexOf(q) !== -1;
+      }).sort(function(a, b){
+        if(state.sort === 'newest') return b.date.localeCompare(a.date);
+        if(state.sort === 'oldest') return a.date.localeCompare(b.date);
+        if(state.sort === 'views') return b.views - a.views;
+        if(state.sort === 'title') return a.title.localeCompare(b.title);
+        return 0;
+      });
+    }
+
+    function renderStats(){
+      var counts = { published: 0, draft: 0, archived: 0 };
+      POSTS.forEach(function(p){ counts[p.status]++; });
+      statRow.innerHTML =
+        '<div class="stat-chip"><span class="num">' + POSTS.length + '</span><span class="lbl">Total</span></div>' +
+        '<div class="stat-chip published"><span class="num">' + counts.published + '</span><span class="lbl">Published</span></div>' +
+        '<div class="stat-chip"><span class="num">' + counts.draft + '</span><span class="lbl">Drafts</span></div>' +
+        '<div class="stat-chip archived"><span class="num">' + counts.archived + '</span><span class="lbl">Archived</span></div>';
+    }
+
+    function renderChips(){
+      var counts = { all: POSTS.length, published: 0, draft: 0, archived: 0 };
+      POSTS.forEach(function(p){ counts[p.status]++; });
+      filterChips.innerHTML = Object.keys(STATUS_LABELS).map(function(key){
+        var active = state.status === key ? ' active' : '';
+        return '<button type="button" class="filter-chip' + active + '" data-status="' + key + '">' +
+          STATUS_LABELS[key] + ' <span class="count">' + counts[key] + '</span></button>';
+      }).join('');
+    }
+
+    function rowTemplate(p){
+      var checked = state.selected.has(p.id) ? ' checked' : '';
+      var archivedClass = p.status === 'archived' ? ' is-archived' : '';
+      var archiveIcon = p.status === 'archived'
+        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h18"/><path d="M5 7l1 13h12l1-13"/><path d="M9 11h6"/><path d="M9 3h6l1 4H8z" opacity="0"/><path d="M12 11v6"/><path d="M9 14l3 3 3-3"/></svg>'
+        : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="4" rx="1"/><path d="M5 8v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8"/><path d="M10 13h4"/></svg>';
+      var archiveTitle = p.status === 'archived' ? 'Restore post' : 'Archive post';
+
+      return (
+        '<li class="admin-row' + archivedClass + '" data-id="' + p.id + '">' +
+          '<input type="checkbox" class="checkbox row-checkbox" data-id="' + p.id + '" aria-label="Select ' + escapeHtml(p.title) + '"' + checked + '>' +
+          '<div class="row-main">' +
+            '<div class="row-top">' +
+              '<span class="status-pill ' + p.status + '">' + p.status + '</span>' +
+            '</div>' +
+            '<a class="row-title" href="/post?id=' + p.id + '">' + escapeHtml(p.title) + '</a>' +
+            '<p class="row-desc">' + escapeHtml(p.desc) + '</p>' +
+            '<div class="row-meta">' +
+              '<span>' + formatDate(p.date) + '</span><span class="dot">·</span>' +
+              '<span class="tag">' + escapeHtml(p.tag) + '</span><span class="dot">·</span>' +
+              '<span class="meta-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>' + formatViews(p.views) + '</span><span class="dot">·</span>' +
+              '<span class="meta-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>' + p.readTime + ' min read</span>' +
+            '</div>' +
+          '</div>' +
+          '<div class="row-actions">' +
+            '<a class="icon-btn view" href="/post?id=' + p.id + '" title="View post" aria-label="View post">' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>' +
+            '</a>' +
+            '<a class="icon-btn edit" href="/new-post?edit=' + p.id + '" title="Edit post" aria-label="Edit post">' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>' +
+            '</a>' +
+            '<button type="button" class="icon-btn archive" data-action="toggle-archive" data-id="' + p.id + '" title="' + archiveTitle + '" aria-label="' + archiveTitle + '">' + archiveIcon + '</button>' +
+            '<button type="button" class="icon-btn delete" data-action="delete" data-id="' + p.id + '" title="Delete post" aria-label="Delete post">' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/><path d="M19 6l-1 14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>' +
+            '</button>' +
+          '</div>' +
+        '</li>'
+      );
+    }
+
+    function render(){
+      renderStats();
+      renderChips();
+
+      var filtered = getFiltered();
+      var totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+      if(state.page > totalPages) state.page = totalPages;
+      var start = (state.page - 1) * PAGE_SIZE;
+      var pageItems = filtered.slice(start, start + PAGE_SIZE);
+
+      resultsCount.textContent = filtered.length + (filtered.length === 1 ? ' post' : ' posts');
+      pageInfo.textContent = filtered.length ? ('Page ' + state.page + ' of ' + totalPages) : '';
+
+      if(pageItems.length === 0){
+        adminList.innerHTML = '';
+        emptyState.style.display = 'block';
+      } else {
+        emptyState.style.display = 'none';
+        adminList.innerHTML = pageItems.map(rowTemplate).join('');
+      }
+
+      // pagination controls
+      if(filtered.length > PAGE_SIZE){
+        paginationBar.style.display = 'flex';
+        paginationBar.innerHTML =
+          '<button type="button" id="prevPageBtn"' + (state.page <= 1 ? ' disabled' : '') + '>← Prev</button>' +
+          '<span class="page-info">' + state.page + ' / ' + totalPages + '</span>' +
+          '<button type="button" id="nextPageBtn"' + (state.page >= totalPages ? ' disabled' : '') + '>Next →</button>';
+        document.getElementById('prevPageBtn').addEventListener('click', function(){ state.page--; render(); });
+        document.getElementById('nextPageBtn').addEventListener('click', function(){ state.page++; render(); });
+      } else {
+        paginationBar.innerHTML = '';
+      }
+
+      // reflect selection state on visible checkboxes + select-all
+      var visibleIds = pageItems.map(function(p){ return p.id; });
+      var visibleSelected = visibleIds.filter(function(id){ return state.selected.has(id); });
+      selectAllCheckbox.checked = visibleIds.length > 0 && visibleSelected.length === visibleIds.length;
+      selectAllCheckbox.indeterminate = visibleSelected.length > 0 && visibleSelected.length < visibleIds.length;
+
+      updateBulkBar();
+    }
+
+    function updateBulkBar(){
+      var n = state.selected.size;
+      if(n > 0){
+        bulkBar.classList.add('visible');
+        bulkLabel.textContent = n + (n === 1 ? ' post selected' : ' posts selected');
+      } else {
+        bulkBar.classList.remove('visible');
+      }
+    }
+
+    function showToast(message, isDanger){
+      var toast = document.createElement('div');
+      toast.className = 'toast' + (isDanger ? ' toast-danger' : '');
+      toast.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span>' + message + '</span>';
+      toastStack.appendChild(toast);
+      requestAnimationFrame(function(){ toast.classList.add('visible'); });
+      setTimeout(function(){
+        toast.classList.remove('visible');
+        setTimeout(function(){ toast.remove(); }, 250);
+      }, 2600);
+    }
+
+    function toggleArchive(id){
+      var post = POSTS.find(function(p){ return p.id === id; });
+      if(!post) return;
+      post.status = post.status === 'archived' ? 'published' : 'archived';
+      showToast(post.status === 'archived' ? 'Post archived' : 'Post restored');
+      render();
+    }
+
+    function deletePosts(ids){
+      POSTS = POSTS.filter(function(p){ return ids.indexOf(p.id) === -1; });
+      ids.forEach(function(id){ state.selected.delete(id); });
+      showToast(ids.length === 1 ? 'Post deleted' : ids.length + ' posts deleted', true);
+      render();
+    }
+
+    function openDeleteModal(ids){
+      pendingDelete = ids;
+      if(ids.length === 1){
+        var post = POSTS.find(function(p){ return p.id === ids[0]; });
+        deleteModalBody.innerHTML = 'This will permanently delete <strong>' + escapeHtml(post ? post.title : 'this post') + '</strong>. This can\'t be undone.';
+      } else {
+        deleteModalBody.innerHTML = 'This will permanently delete <strong>' + ids.length + ' posts</strong>. This can\'t be undone.';
+      }
+      deleteModal.classList.add('visible');
+    }
+    function closeDeleteModal(){
+      deleteModal.classList.remove('visible');
+      pendingDelete = null;
+    }
+
+    // ----- events -----
+    searchInput.addEventListener('input', function(){
+      state.query = searchInput.value;
+      state.page = 1;
+      render();
+    });
+    sortSelect.addEventListener('change', function(){
+      state.sort = sortSelect.value;
+      render();
+    });
+    filterChips.addEventListener('click', function(e){
+      var chip = e.target.closest('.filter-chip');
+      if(!chip) return;
+      state.status = chip.getAttribute('data-status');
+      state.page = 1;
+      render();
+    });
+
+    selectAllCheckbox.addEventListener('change', function(){
+      var filtered = getFiltered();
+      var start = (state.page - 1) * PAGE_SIZE;
+      var pageIds = filtered.slice(start, start + PAGE_SIZE).map(function(p){ return p.id; });
+      if(selectAllCheckbox.checked){
+        pageIds.forEach(function(id){ state.selected.add(id); });
+      } else {
+        pageIds.forEach(function(id){ state.selected.delete(id); });
+      }
+      render();
+    });
+
+    adminList.addEventListener('change', function(e){
+      var cb = e.target.closest('.row-checkbox');
+      if(!cb) return;
+      var id = Number(cb.getAttribute('data-id'));
+      if(cb.checked) state.selected.add(id); else state.selected.delete(id);
+      updateBulkBar();
+      // keep select-all in sync without a full re-render
+      var filtered = getFiltered();
+      var start = (state.page - 1) * PAGE_SIZE;
+      var visibleIds = filtered.slice(start, start + PAGE_SIZE).map(function(p){ return p.id; });
+      var visibleSelected = visibleIds.filter(function(id){ return state.selected.has(id); });
+      selectAllCheckbox.checked = visibleIds.length > 0 && visibleSelected.length === visibleIds.length;
+      selectAllCheckbox.indeterminate = visibleSelected.length > 0 && visibleSelected.length < visibleIds.length;
+    });
+
+    adminList.addEventListener('click', function(e){
+      var btn = e.target.closest('button[data-action]');
+      if(!btn) return;
+      var id = Number(btn.getAttribute('data-id'));
+      var action = btn.getAttribute('data-action');
+      if(action === 'toggle-archive') toggleArchive(id);
+      else if(action === 'delete') openDeleteModal([id]);
+    });
+
+    document.getElementById('bulkArchiveBtn').addEventListener('click', function(){
+      var ids = Array.from(state.selected);
+      ids.forEach(function(id){
+        var post = POSTS.find(function(p){ return p.id === id; });
+        if(post) post.status = 'archived';
+      });
+      showToast(ids.length === 1 ? 'Post archived' : ids.length + ' posts archived');
+      state.selected.clear();
+      render();
+    });
+    document.getElementById('bulkDeleteBtn').addEventListener('click', function(){
+      openDeleteModal(Array.from(state.selected));
+    });
+    document.getElementById('bulkClearBtn').addEventListener('click', function(){
+      state.selected.clear();
+      render();
+    });
+
+    document.getElementById('cancelDeleteBtn').addEventListener('click', closeDeleteModal);
+    document.getElementById('confirmDeleteBtn').addEventListener('click', function(){
+      if(pendingDelete) deletePosts(pendingDelete);
+      closeDeleteModal();
+    });
+    deleteModal.addEventListener('click', function(e){
+      if(e.target === deleteModal) closeDeleteModal();
+    });
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape' && deleteModal.classList.contains('visible')) closeDeleteModal();
+    });
+
+    render();
+  })();
+
+</script>
+</body>
+</html>

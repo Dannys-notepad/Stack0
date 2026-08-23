@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New post · Stack0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/global.css">
+<script src="js/global.js" defer></script>
+</head>
+<body id="top">
+
+<!-- ===== Header / TopBar (component: Header.astro — props: siteTitle, navLinks) ===== -->
+<div class="top-bar">
+  <div class="top-bar-inner">
+    <div class="site-title"><a href="#top">Stack0.</a></div>
+
+    <div class="hamburger-wrap" id="hamburgerWrap">
+      <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="hamburger-dropdown">
+        <div class="dropdown-col">
+          <a class="dropdown-search" href="/search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            Search
+          </a>
+        </div>
+        <div class="dropdown-col">
+          <div class="dropdown-label">Writing</div>
+          <a href="/archives">Archives</a>
+          <a href="/tags">Tags</a>
+        </div>
+        <div class="dropdown-col">
+          <div class="dropdown-label">More</div>
+          <a href="/about">About</a>
+          <a href="/appearances">Appearances</a>
+        </div>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<div class="page-frame">
+  <span class="cross-marker" id="crossMarker"></span>
+
+  <a class="back-link" href="/">← Back to dashboard</a>
+
+  <!-- ===== ComposeHeader ===== -->
+  <header class="compose-header">
+    <h1 class="compose-title">New post</h1>
+    <p class="compose-subtitle">Write in Markdown on the left, fill in the metadata on the right. Nothing is sent anywhere in this demo — Save draft / Publish just confirm inline.</p>
+  </header>
+
+  <form id="postForm" novalidate>
+    <div class="editor-layout">
+
+      <!-- ===== PostEditor (component: PostEditor.astro) — title, excerpt, markdown body ===== -->
+      <div class="editor-main">
+
+        <div class="field">
+          <label class="field-label" for="titleInput">Title</label>
+          <input class="title-input" type="text" id="titleInput" name="title" placeholder="A working title for the post" required maxlength="120">
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="excerptInput">
+            Excerpt
+            <span class="char-counter" id="excerptCounter">0 / 200</span>
+          </label>
+          <textarea class="textarea-input" id="excerptInput" name="excerpt" rows="3" maxlength="200" placeholder="One or two sentences — this is what shows on the homepage list and archive cards." required></textarea>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="contentInput">Content (Markdown)</label>
+
+          <div class="editor-tabs" role="tablist">
+            <button type="button" class="editor-tab active" id="writeTab" role="tab" aria-selected="true">Write</button>
+            <button type="button" class="editor-tab" id="previewTab" role="tab" aria-selected="false">Preview</button>
+          </div>
+
+          <div class="editor-pane active" id="writePane">
+            <!-- ===== MarkdownToolbar.astro — inserts syntax at the cursor ===== -->
+            <div class="editor-toolbar">
+              <button type="button" class="editor-toolbar-btn" data-md="bold" title="Bold" aria-label="Bold">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4h8a4 4 0 0 1 0 8H6z"/><path d="M6 12h9a4 4 0 0 1 0 8H6z"/></svg>
+              </button>
+              <button type="button" class="editor-toolbar-btn" data-md="italic" title="Italic" aria-label="Italic">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 4h-9"/><path d="M14 20H5"/><path d="M15 4L9 20"/></svg>
+              </button>
+              <div class="editor-toolbar-sep"></div>
+              <button type="button" class="editor-toolbar-btn" data-md="h2" title="Heading" aria-label="Heading">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6v12"/><path d="M12 6v12"/><path d="M4 12h8"/><path d="M17 18v-8l-2 2"/></svg>
+              </button>
+              <button type="button" class="editor-toolbar-btn" data-md="link" title="Link" aria-label="Link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.5.4l2-2a5 5 0 0 0-7-7l-1.2 1.1"/><path d="M14 11a5 5 0 0 0-7.5-.4l-2 2a5 5 0 0 0 7 7l1.1-1.1"/></svg>
+              </button>
+              <button type="button" class="editor-toolbar-btn" data-md="code" title="Code" aria-label="Code">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6"/><path d="M8 6l-6 6 6 6"/></svg>
+              </button>
+              <div class="editor-toolbar-sep"></div>
+              <button type="button" class="editor-toolbar-btn" data-md="ul" title="Bulleted list" aria-label="Bulleted list">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/><path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/></svg>
+              </button>
+              <button type="button" class="editor-toolbar-btn" data-md="quote" title="Quote" aria-label="Quote">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h4v4a4 4 0 0 1-4 4"/><path d="M15 7h4v4a4 4 0 0 1-4 4"/></svg>
+              </button>
+            </div>
+            <label for="contentInput" class="sr-only">Post content in Markdown</label>
+            <textarea class="markdown-textarea" id="contentInput" name="content" placeholder="## Start writing&#10;&#10;Markdown is supported — headings, **bold**, *italic*, `code`, links, lists, blockquotes, and fenced code blocks." required></textarea>
+          </div>
+
+          <div class="editor-pane" id="previewPane">
+            <div class="markdown-preview prose" id="markdownPreview"></div>
+          </div>
+
+          <div class="editor-footer-row">
+            <p class="field-hint">Markdown is rendered live in the Preview tab.</p>
+            <span class="char-counter" id="wordCounter">0 words</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== PostMeta sidebar (component: PostMetaSidebar.astro) ===== -->
+      <aside class="editor-sidebar">
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-label">Status</div>
+          <div class="segmented" role="radiogroup" aria-label="Post status">
+            <button type="button" class="segmented-btn active" data-status="draft" role="radio" aria-checked="true">Draft</button>
+            <button type="button" class="segmented-btn" data-status="published" role="radio" aria-checked="false">Published</button>
+          </div>
+          <input type="hidden" id="statusInput" name="status" value="draft">
+        </div>
+
+        <div class="sidebar-section">
+          <label class="field-label" for="tagSelect">Tag</label>
+          <select class="select-input" id="tagSelect" name="tag" required>
+            <option value="" disabled selected>Choose a tag…</option>
+            <option value="Go">Go</option>
+            <option value="Shards">Shards</option>
+            <option value="System">System</option>
+            <option value="Zephyr">Zephyr</option>
+            <option value="Misc">Misc</option>
+          </select>
+          <button type="button" class="tag-add-toggle" id="tagAddToggle">+ New tag</button>
+          <div class="tag-add-row" id="tagAddRow">
+            <input type="text" class="text-input" id="newTagInput" placeholder="New tag name">
+            <button type="button" id="newTagConfirm">Add</button>
+          </div>
+        </div>
+
+        <div class="sidebar-section">
+          <label class="field-label" for="coverInput">
+            Cover image
+            <span class="optional">optional</span>
+          </label>
+          <div class="cover-preview" id="coverPreview">No cover image</div>
+          <input class="text-input" type="url" id="coverInput" name="coverImage" placeholder="https://…/cover.jpg">
+          <p class="field-hint">Paste an image URL — used on the homepage card and the post header.</p>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-label">SEO</div>
+
+          <div class="field">
+            <label class="field-label" for="metaTitleInput">
+              Meta title
+              <span class="char-counter" id="metaTitleCounter">0 / 60</span>
+            </label>
+            <input class="text-input" type="text" id="metaTitleInput" name="metaTitle" maxlength="70" placeholder="Defaults to the post title">
+          </div>
+
+          <div class="field" style="margin-bottom:0;">
+            <label class="field-label" for="metaDescInput">
+              Meta description
+              <span class="char-counter" id="metaDescCounter">0 / 155</span>
+            </label>
+            <textarea class="textarea-input" id="metaDescInput" name="metaDescription" rows="3" maxlength="175" placeholder="Defaults to the excerpt"></textarea>
+          </div>
+
+          <div class="seo-preview">
+            <div class="seo-preview-url">stack0.dev › posts › your-post-slug</div>
+            <div class="seo-preview-title" id="seoPreviewTitle">A working title for the post</div>
+            <div class="seo-preview-desc" id="seoPreviewDesc">One or two sentences — this is what shows on the homepage list and archive cards.</div>
+          </div>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-label">How this looks</div>
+          <div class="preview-card-wrap" id="cardPreviewWrap">
+            <p class="preview-empty">Fill in a title, excerpt, and tag to see the card preview.</p>
+          </div>
+        </div>
+
+      </aside>
+    </div>
+
+    <!-- ===== ComposeBar.astro — sticky save/publish actions ===== -->
+    <div class="compose-bar">
+      <span class="compose-bar-status" id="composeBarStatus">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+        Draft — not saved
+      </span>
+      <div class="compose-bar-actions">
+        <button type="button" class="btn btn-ghost" id="saveDraftBtn">Save draft</button>
+        <button type="submit" class="btn btn-accent" id="publishBtn">Publish</button>
+      </div>
+    </div>
+  </form>
+
+  <!-- ===== Footer (component: Footer.astro) — no newsletter block on the compose screen ===== -->
+  <footer>
+    <div class="footer-links">
+      <a href="#">blogroll</a>
+      <a href="#">maxims</a>
+      <a href="/tags">tags</a>
+    </div>
+    <div>© 2026 <a href="#">Etim Daniel Udeme</a></div>
+    <a href="#top" id="back-to-top" aria-label="Back to top">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>
+    </a>
+  </footer>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+<script>
+  // Cross marker: projects the cursor onto the nearest edge of the frame border.
+  // Once the frame's true top edge has scrolled up behind the sticky header,
+  // the header's own bottom border is treated as the effective top edge —
+  // so the marker traces around the corner onto the left/right borders
+  // instead of freezing in place, and never disappears past the top.
+  (function(){
+    var frame = document.querySelector('.page-frame');
+    var marker = document.getElementById('crossMarker');
+    var topBar = document.querySelector('.top-bar');
+    if(!frame || !marker) return;
+    var raf = null;
+    var lastClientX = null, lastClientY = null;
+
+    function project(x, y, w, h){
+      var dTop = y, dBottom = h - y, dLeft = x, dRight = w - x;
+      var min = Math.min(dTop, dBottom, dLeft, dRight);
+      if(min === dTop) return [Math.min(Math.max(x,0),w), 0];
+      if(min === dBottom) return [Math.min(Math.max(x,0),w), h];
+      if(min === dLeft) return [0, Math.min(Math.max(y,0),h)];
+      return [w, Math.min(Math.max(y,0),h)];
+    }
+
+    function update(){
+      var rect = frame.getBoundingClientRect();
+      var barBottom = topBar ? topBar.getBoundingClientRect().bottom : 0;
+
+      // effective top edge: the frame's real top, or the header's border,
+      // whichever is lower on screen (i.e. whichever hasn't scrolled away)
+      var effTop = Math.max(rect.top, barBottom);
+      var offsetY = effTop - rect.top; // frame-local y where the effective region starts
+      var effW = rect.width;
+      var effH = Math.max(0, rect.bottom - effTop);
+
+      var x = lastClientX === null ? 0 : lastClientX - rect.left;
+      var y = lastClientY === null ? 0 : lastClientY - effTop;
+      var p = project(x, y, effW, effH);
+
+      marker.style.left = p[0] + 'px';
+      marker.style.top = (offsetY + p[1]) + 'px';
+    }
+
+    frame.addEventListener('mousemove', function(e){
+      lastClientX = e.clientX;
+      lastClientY = e.clientY;
+      if(raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(update);
+      frame.classList.add('tracking');
+    });
+
+    frame.addEventListener('mouseleave', function(){
+      frame.classList.remove('tracking');
+      lastClientX = null;
+      lastClientY = null;
+      marker.style.left = '0px';
+      marker.style.top = '0px';
+    });
+
+    window.addEventListener('scroll', function(){
+      if(lastClientX === null) return;
+      if(raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(update);
+    }, { passive:true });
+  })();
+
+  // Hamburger menu: hover-only on desktop (CSS handles that). Below 701px
+  // there's no reliable hover, so click/tap toggles it there instead, and
+  // closes on an outside click or Escape.
+  (function(){
+    var wrap = document.getElementById('hamburgerWrap');
+    var btn = document.getElementById('hamburgerBtn');
+    if(!wrap || !btn) return;
+    var mq = window.matchMedia('(max-width:700px)');
+
+    function closeMenu(){
+      wrap.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+    }
+    function toggleMenu(){
+      var isOpen = wrap.classList.toggle('open');
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    }
+
+    btn.addEventListener('click', function(e){
+      if(!mq.matches){
+        // Desktop: opening/closing is driven entirely by :hover / :focus-within
+        // in CSS. Clicking still focuses the button by default though, and
+        // that focus alone keeps :focus-within (and the dropdown) open even
+        // after the mouse leaves — so drop focus immediately on click here.
+        btn.blur();
+        return;
+      }
+      e.stopPropagation();
+      toggleMenu();
+    });
+    document.addEventListener('click', function(e){
+      if(!wrap.contains(e.target)) closeMenu();
+    });
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape') closeMenu();
+    });
+  })();
+
+  // Newsletter form: this demo has no backend, so just confirm submission
+  // inline. Replace with a real fetch() to your subscribe endpoint.
+  (function(){
+    var form = document.querySelector('.newsletter-form');
+    if(!form) return;
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var btn = form.querySelector('button');
+      var original = btn.textContent;
+      btn.textContent = 'Subscribed ✓';
+      btn.disabled = true;
+      setTimeout(function(){
+        btn.textContent = original;
+        btn.disabled = false;
+        form.reset();
+      }, 2200);
+    });
+  })();
+
+
+  // ===== Compose form: editor tabs, toolbar, counters, live previews =====
+  (function(){
+    var titleInput = document.getElementById('titleInput');
+    var excerptInput = document.getElementById('excerptInput');
+    var excerptCounter = document.getElementById('excerptCounter');
+    var contentInput = document.getElementById('contentInput');
+    var wordCounter = document.getElementById('wordCounter');
+    var writeTab = document.getElementById('writeTab');
+    var previewTab = document.getElementById('previewTab');
+    var writePane = document.getElementById('writePane');
+    var previewPane = document.getElementById('previewPane');
+    var markdownPreview = document.getElementById('markdownPreview');
+    var toolbar = document.querySelector('.editor-toolbar');
+    var tagSelect = document.getElementById('tagSelect');
+    var tagAddToggle = document.getElementById('tagAddToggle');
+    var tagAddRow = document.getElementById('tagAddRow');
+    var newTagInput = document.getElementById('newTagInput');
+    var newTagConfirm = document.getElementById('newTagConfirm');
+    var coverInput = document.getElementById('coverInput');
+    var coverPreview = document.getElementById('coverPreview');
+    var metaTitleInput = document.getElementById('metaTitleInput');
+    var metaTitleCounter = document.getElementById('metaTitleCounter');
+    var metaDescInput = document.getElementById('metaDescInput');
+    var metaDescCounter = document.getElementById('metaDescCounter');
+    var seoPreviewTitle = document.getElementById('seoPreviewTitle');
+    var seoPreviewDesc = document.getElementById('seoPreviewDesc');
+    var cardPreviewWrap = document.getElementById('cardPreviewWrap');
+    var statusInput = document.getElementById('statusInput');
+    var segmentedBtns = document.querySelectorAll('.segmented-btn');
+    var composeBarStatus = document.getElementById('composeBarStatus');
+    var saveDraftBtn = document.getElementById('saveDraftBtn');
+    var publishBtn = document.getElementById('publishBtn');
+    var form = document.getElementById('postForm');
+
+    // ----- markdown rendering (falls back to a plain-text pre if the CDN didn't load) -----
+    function renderMarkdown(md){
+      if(!md){ markdownPreview.innerHTML = ''; return; }
+      if(window.marked && typeof window.marked.parse === 'function'){
+        markdownPreview.innerHTML = window.marked.parse(md);
+      } else {
+        var esc = md.replace(/[&<>]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]; });
+        markdownPreview.innerHTML = '<pre>' + esc + '</pre>';
+      }
+    }
+
+    // ----- Write / Preview tabs -----
+    function activateTab(tab){
+      var isWrite = tab === 'write';
+      writeTab.classList.toggle('active', isWrite);
+      previewTab.classList.toggle('active', !isWrite);
+      writeTab.setAttribute('aria-selected', isWrite ? 'true' : 'false');
+      previewTab.setAttribute('aria-selected', (!isWrite) ? 'true' : 'false');
+      writePane.classList.toggle('active', isWrite);
+      previewPane.classList.toggle('active', !isWrite);
+      if(!isWrite) renderMarkdown(contentInput.value);
+    }
+    writeTab.addEventListener('click', function(){ activateTab('write'); });
+    previewTab.addEventListener('click', function(){ activateTab('preview'); });
+
+    // ----- toolbar: insert markdown syntax around the current selection -----
+    var wraps = {
+      bold: ['**', '**', 'bold text'],
+      italic: ['*', '*', 'italic text'],
+      link: ['[', '](https://)', 'link text'],
+      code: ['`', '`', 'code']
+    };
+    var linePrefixes = {
+      h2: '## ',
+      ul: '- ',
+      quote: '> '
+    };
+    toolbar.addEventListener('click', function(e){
+      var btn = e.target.closest('.editor-toolbar-btn');
+      if(!btn) return;
+      var kind = btn.getAttribute('data-md');
+      var start = contentInput.selectionStart;
+      var end = contentInput.selectionEnd;
+      var value = contentInput.value;
+      var selected = value.slice(start, end);
+
+      if(wraps[kind]){
+        var pre = wraps[kind][0], post = wraps[kind][1], placeholder = wraps[kind][2];
+        var text = selected || placeholder;
+        contentInput.value = value.slice(0, start) + pre + text + post + value.slice(end);
+        var newStart = start + pre.length;
+        contentInput.setSelectionRange(newStart, newStart + text.length);
+      } else if(linePrefixes[kind]){
+        var lineStart = value.lastIndexOf('\n', start - 1) + 1;
+        contentInput.value = value.slice(0, lineStart) + linePrefixes[kind] + value.slice(lineStart);
+        var caret = start + linePrefixes[kind].length;
+        contentInput.setSelectionRange(caret, caret);
+      }
+      contentInput.focus();
+      contentInput.dispatchEvent(new Event('input'));
+    });
+
+    // ----- word count -----
+    function updateWordCount(){
+      var words = contentInput.value.trim().length ? contentInput.value.trim().split(/\s+/).length : 0;
+      wordCounter.textContent = words + (words === 1 ? ' word' : ' words');
+    }
+    contentInput.addEventListener('input', function(){
+      updateWordCount();
+      if(previewPane.classList.contains('active')) renderMarkdown(contentInput.value);
+      updateCardPreview();
+    });
+
+    // ----- excerpt counter -----
+    function updateExcerptCounter(){
+      var len = excerptInput.value.length;
+      excerptCounter.textContent = len + ' / 200';
+      excerptCounter.classList.toggle('over', len > 200);
+    }
+    excerptInput.addEventListener('input', function(){
+      updateExcerptCounter();
+      updateSeoPreview();
+      updateCardPreview();
+    });
+
+    // ----- title -> seo preview + card preview -----
+    titleInput.addEventListener('input', function(){
+      updateSeoPreview();
+      updateCardPreview();
+    });
+
+    // ----- status segmented control -----
+    segmentedBtns.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        segmentedBtns.forEach(function(b){
+          b.classList.remove('active');
+          b.setAttribute('aria-checked', 'false');
+        });
+        btn.classList.add('active');
+        btn.setAttribute('aria-checked', 'true');
+        var status = btn.getAttribute('data-status');
+        statusInput.value = status;
+        publishBtn.textContent = status === 'published' ? 'Update' : 'Publish';
+        updateComposeBarStatus('idle');
+      });
+    });
+
+    // ----- tag: add-new toggle -----
+    tagAddToggle.addEventListener('click', function(){
+      tagAddRow.classList.toggle('open');
+      if(tagAddRow.classList.contains('open')) newTagInput.focus();
+    });
+    newTagConfirm.addEventListener('click', function(){
+      var name = newTagInput.value.trim();
+      if(!name) return;
+      var exists = Array.from(tagSelect.options).some(function(o){ return o.value.toLowerCase() === name.toLowerCase(); });
+      if(!exists){
+        var opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        tagSelect.appendChild(opt);
+      }
+      tagSelect.value = name;
+      newTagInput.value = '';
+      tagAddRow.classList.remove('open');
+      updateCardPreview();
+    });
+    tagSelect.addEventListener('change', updateCardPreview);
+
+    // ----- cover image preview -----
+    coverInput.addEventListener('input', function(){
+      var url = coverInput.value.trim();
+      if(url){
+        coverPreview.style.backgroundImage = 'url(' + JSON.stringify(url).slice(1, -1) + ')';
+        coverPreview.textContent = '';
+      } else {
+        coverPreview.style.backgroundImage = 'none';
+        coverPreview.textContent = 'No cover image';
+      }
+    });
+
+    // ----- SEO preview -----
+    function updateSeoPreview(){
+      var titleLen = metaTitleInput.value.length;
+      var descLen = metaDescInput.value.length;
+      metaTitleCounter.textContent = titleLen + ' / 60';
+      metaTitleCounter.classList.toggle('over', titleLen > 60);
+      metaDescCounter.textContent = descLen + ' / 155';
+      metaDescCounter.classList.toggle('over', descLen > 155);
+
+      seoPreviewTitle.textContent = metaTitleInput.value.trim() || titleInput.value.trim() || 'A working title for the post';
+      seoPreviewDesc.textContent = metaDescInput.value.trim() || excerptInput.value.trim() || 'One or two sentences — this is what shows on the homepage list and archive cards.';
+    }
+    metaTitleInput.addEventListener('input', updateSeoPreview);
+    metaDescInput.addEventListener('input', updateSeoPreview);
+
+    // ----- "how this looks" card preview, built from the same .post markup used on the homepage -----
+    function escapeHtml(s){
+      return s.replace(/[&<>]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]; });
+    }
+    function updateCardPreview(){
+      var title = titleInput.value.trim();
+      var excerpt = excerptInput.value.trim();
+      var tag = tagSelect.value;
+      if(!title && !excerpt && !tag){
+        cardPreviewWrap.innerHTML = '<p class="preview-empty">Fill in a title, excerpt, and tag to see the card preview.</p>';
+        return;
+      }
+      var words = contentInput.value.trim().length ? contentInput.value.trim().split(/\s+/).length : 0;
+      var readMins = Math.max(1, Math.round(words / 200));
+      var today = new Date().toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' });
+
+      cardPreviewWrap.innerHTML =
+        '<article class="post">' +
+          '<div class="post-meta">' +
+            '<span>' + today + '</span>' +
+            (tag ? '<span class="dot">·</span><span class="tag">' + escapeHtml(tag) + '</span>' : '') +
+            '<span class="dot">·</span>' +
+            '<span class="meta-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>' + readMins + ' min read</span>' +
+          '</div>' +
+          '<a class="post-title" href="#">' + (escapeHtml(title) || 'Untitled post') + '</a>' +
+          '<p class="post-desc">' + (escapeHtml(excerpt) || 'No excerpt yet.') + '</p>' +
+        '</article>';
+    }
+
+    // ----- compose bar status pill -----
+    function updateComposeBarStatus(state){
+      var status = statusInput.value;
+      if(state === 'saved'){
+        composeBarStatus.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Draft saved';
+      } else if(state === 'published'){
+        composeBarStatus.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Published';
+      } else {
+        composeBarStatus.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg> ' + (status === 'published' ? 'Published — unsaved changes' : 'Draft — not saved');
+      }
+    }
+
+    // ----- save / publish (demo only — no backend) -----
+    saveDraftBtn.addEventListener('click', function(){
+      var original = saveDraftBtn.textContent;
+      saveDraftBtn.textContent = 'Saved ✓';
+      saveDraftBtn.disabled = true;
+      updateComposeBarStatus('saved');
+      setTimeout(function(){
+        saveDraftBtn.textContent = original;
+        saveDraftBtn.disabled = false;
+      }, 1800);
+    });
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      if(!titleInput.value.trim() || !excerptInput.value.trim() || !contentInput.value.trim() || !tagSelect.value){
+        updateComposeBarStatus('idle');
+        if(!titleInput.value.trim()) titleInput.focus();
+        else if(!tagSelect.value) tagSelect.focus();
+        else if(!excerptInput.value.trim()) excerptInput.focus();
+        else contentInput.focus();
+        return;
+      }
+      statusInput.value = 'published';
+      segmentedBtns.forEach(function(b){
+        var isPublished = b.getAttribute('data-status') === 'published';
+        b.classList.toggle('active', isPublished);
+        b.setAttribute('aria-checked', isPublished ? 'true' : 'false');
+      });
+      var original = publishBtn.textContent;
+      publishBtn.textContent = 'Published ✓';
+      publishBtn.disabled = true;
+      updateComposeBarStatus('published');
+      setTimeout(function(){
+        publishBtn.textContent = 'Update';
+        publishBtn.disabled = false;
+      }, 1800);
+    });
+
+    // initial paint
+    updateExcerptCounter();
+    updateWordCount();
+    updateSeoPreview();
+    updateCardPreview();
+  })();
+</script>
+
+</body>
+</html>

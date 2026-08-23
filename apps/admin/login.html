@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign in · Stack0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/global.css">
+<script src="js/global.js" defer></script>
+</head>
+<body id="top">
+
+<!-- ===== Header / TopBar (component: Header.astro — props: siteTitle, navLinks) ===== -->
+<div class="top-bar">
+  <div class="top-bar-inner">
+    <div class="site-title"><a href="#top">Stack0.</a></div>
+
+    <div class="hamburger-wrap" id="hamburgerWrap">
+      <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="hamburger-dropdown">
+        <div class="dropdown-col">
+          <a class="dropdown-search" href="/search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            Search
+          </a>
+        </div>
+        <div class="dropdown-col">
+          <div class="dropdown-label">Writing</div>
+          <a href="/archives">Archives</a>
+          <a href="/tags">Tags</a>
+        </div>
+        <div class="dropdown-col">
+          <div class="dropdown-label">More</div>
+          <a href="/about">About</a>
+          <a href="/appearances">Appearances</a>
+        </div>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<div class="page-frame">
+  <span class="cross-marker" id="crossMarker"></span>
+
+  <a class="back-link" href="/">← Back to the blog</a>
+
+  <!-- ===== LoginShell.astro — centers the LoginCard within the page frame ===== -->
+  <div class="login-shell">
+    <div class="login-card">
+
+      <div class="login-mark">S0</div>
+      <h1 class="login-title">Sign in</h1>
+      <p class="login-subtitle">Sign in to write and manage posts.</p>
+
+      <!-- ===== LoginForm.astro ===== -->
+      <form id="loginForm" novalidate>
+
+        <div class="form-message" id="formMessage" role="alert">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg>
+          <span id="formMessageText">Enter a valid email and password.</span>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="emailInput">Email</label>
+          <input class="text-input" type="email" id="emailInput" name="email" placeholder="you@example.com" autocomplete="username" required>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="passwordInput">Password</label>
+          <div class="password-field" id="passwordField">
+            <input class="text-input" type="password" id="passwordInput" name="password" placeholder="••••••••" autocomplete="current-password" required>
+            <button type="button" class="password-toggle" id="passwordToggle" aria-label="Show password">
+              <svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a18.6 18.6 0 0 1 5.06-5.94M9.9 4.24A10.6 10.6 0 0 1 12 4c7 0 11 7 11 7a18.6 18.6 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><path d="M1 1l22 22"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <label class="remember-me">
+            <input type="checkbox" id="rememberInput" name="remember">
+            Remember me
+          </label>
+          <a class="forgot-link" href="#">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="btn btn-accent" id="signInBtn">Sign in</button>
+      </form>
+
+      <p class="login-footnote">Not signed in yet, just exploring? <a href="/">Back to the blog →</a></p>
+    </div>
+  </div>
+
+  <!-- ===== Footer (component: Footer.astro) — no newsletter block on the auth screen ===== -->
+  <footer>
+    <div class="footer-links">
+      <a href="#">blogroll</a>
+      <a href="#">maxims</a>
+      <a href="/tags">tags</a>
+    </div>
+    <div>© 2026 <a href="#">Etim Daniel Udeme</a></div>
+    <a href="#top" id="back-to-top" aria-label="Back to top">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>
+    </a>
+  </footer>
+
+</div>
+
+<script>
+
+
+  // ===== Login form: password visibility, validation, fake auth =====
+  (function(){
+    var form = document.getElementById('loginForm');
+    var emailInput = document.getElementById('emailInput');
+    var passwordInput = document.getElementById('passwordInput');
+    var passwordField = document.getElementById('passwordField');
+    var passwordToggle = document.getElementById('passwordToggle');
+    var rememberInput = document.getElementById('rememberInput');
+    var signInBtn = document.getElementById('signInBtn');
+    var formMessage = document.getElementById('formMessage');
+    var formMessageText = document.getElementById('formMessageText');
+
+    passwordToggle.addEventListener('click', function(){
+      var revealed = passwordField.classList.toggle('revealed');
+      passwordInput.type = revealed ? 'text' : 'password';
+      passwordToggle.setAttribute('aria-label', revealed ? 'Hide password' : 'Show password');
+    });
+
+    function showMessage(text){
+      formMessageText.textContent = text;
+      formMessage.classList.add('visible');
+    }
+    function hideMessage(){
+      formMessage.classList.remove('visible');
+    }
+    function isValidEmail(value){
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    }
+
+    [emailInput, passwordInput].forEach(function(input){
+      input.addEventListener('input', function(){
+        input.classList.remove('field-error');
+        hideMessage();
+      });
+    });
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      hideMessage();
+      emailInput.classList.remove('field-error');
+      passwordInput.classList.remove('field-error');
+
+      var email = emailInput.value.trim();
+      var password = passwordInput.value;
+      var hasError = false;
+
+      if(!isValidEmail(email)){
+        emailInput.classList.add('field-error');
+        hasError = true;
+      }
+      if(!password || password.length < 6){
+        passwordInput.classList.add('field-error');
+        hasError = true;
+      }
+
+      if(hasError){
+        showMessage('Enter a valid email and a password of at least 6 characters.');
+        return;
+      }
+
+      // No backend here — simulate an auth round-trip, then hand off
+      // to the compose screen the way a real session redirect would.
+      var original = signInBtn.textContent;
+      signInBtn.textContent = 'Signing in…';
+      signInBtn.disabled = true;
+
+      setTimeout(function(){
+        signInBtn.textContent = 'Signed in ✓';
+        setTimeout(function(){
+          window.location.href = 'new-post.html';
+        }, 500);
+      }, 900);
+    });
+  })();
+</script>
+
+</body>
+</html>
