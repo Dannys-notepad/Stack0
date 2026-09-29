@@ -1,0 +1,28 @@
+---
+import { getCollection } from 'astro:content';
+import ProjectLayout from '../../layouts/ProjectLayout.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+
+  const sorted = projects.sort((a, b) => {
+    if (a.data.order !== b.data.order) return a.data.order - b.data.order;
+    return b.data.startDate.valueOf() - a.data.startDate.valueOf();
+  });
+
+  return sorted.map((project, index) => {
+    const related = sorted
+      .filter((p) => p.id !== project.id)
+      .slice(0, 3);
+
+    return {
+      params: { slug: project.id },
+      props: { project, related }
+    };
+  });
+}
+
+const { project, related } = Astro.props;
+---
+
+<ProjectLayout project={project} related={related} />

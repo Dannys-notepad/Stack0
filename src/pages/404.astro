@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Page not found" description="There's nothing at this address." showNewsletter={false}>
+  <main class="error-main">
+    <div class="error-glyph-wrap">
+      <svg class="error-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28">
+        <circle cx="11" cy="11" r="7"/>
+        <path d="M21 21l-4.3-4.3"/>
+        <path d="M8.5 8.5l5 5"/>
+        <path d="M13.5 8.5l-5 5"/>
+      </svg>
+    </div>
+
+    <p class="error-eyebrow">Error 404</p>
+    <h1 class="error-code">404</h1>
+    <h2 class="error-title">This page went missing</h2>
+    <p class="error-desc">
+      There's nothing at this address. The post may have been renamed,
+      archived, or never existed. Try searching, or head back to the homepage.
+    </p>
+
+    <div class="error-actions">
+      <a class="error-btn primary" href="/">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 11l9-8 9 8"/>
+          <path d="M5 10v10h14V10"/>
+        </svg>
+        Back to homepage
+      </a>
+      <a class="error-btn secondary" href="/search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7"/>
+          <path d="M21 21l-4.3-4.3"/>
+        </svg>
+        Search posts
+      </a>
+    </div>
+  </main>
+</BaseLayout>

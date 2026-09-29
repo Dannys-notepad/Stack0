@@ -1,0 +1,91 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BackLink from '../../components/common/BackLink.astro';
+import PostCard from '../../components/post/PostCard.astro';
+import tagsData from '../../data/tags.json';
+import { formatDate } from '../../lib/format-date';
+
+const allPosts = (await getCollection('posts', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+// Build a map of topic slug -> posts that reference it.
+const postsByTopic = {};
+for (const topic of tagsData.topics) {
+  postsByTopic[topic.slug] = [];
+}
+for (const post of allPosts) {
+  for (const tag of post.data.tags) {
+    if (postsByTopic[tag]) {
+      postsByTopic[tag].push(post);
+    }
+  }
+}
+
+// Only keep topics that have at least one post.
+const activeTopics = tagsData.topics
+  .map((topic) => ({
+    ...topic,
+    posts: postsByTopic[topic.slug]
+  }))
+  .filter((topic) => topic.posts.length > 0);
+
+// Size the cloud item based on post count.
+function sizeFor(count, max) {
+  if (count >= max) return 'size-lg';
+  if (count >= max * 0.5) return 'size-md';
+  return 'size-sm';
+}
+
+const maxCount = Math.max(...activeTopics.map((t) => t.posts.length), 1);
+---
+
+<BaseLayout title="Tags" description="Every post, grouped by topic.">
+  <BackLink href="/" label="Back to all posts" />
+
+  <main>
+    <header class="tags-page-header">
+      <h1 class="tags-page-title">Tags</h1>
+      <p class="tags-page-desc">Every post, grouped by topic.</p>
+
+      <nav class="tag-cloud" aria-label="Browse by tag">
+        {activeTopics.map((topic) => (
+          <a
+            class={`tag-cloud-item ${sizeFor(topic.posts.length, maxCount)}`}
+            href={`#${topic.slug}`}
+          >
+            {topic.label} <span class="tag-count">{topic.posts.length}</span>
+          </a>
+        ))}
+      </nav>
+    </header>
+
+    <nav class="tag-jumpnav" aria-label="Jump to tag section">
+      {activeTopics.map((topic, i) => (
+        <>
+          {i > 0 && <span class="dot">·</span>}
+          <a href={`#${topic.slug}`}>{topic.label}</a>
+        </>
+      ))}
+    </nav>
+
+    {activeTopics.map((topic) => (
+      <section class="tag-section" id={topic.slug}>
+        <h2 class="tag-section-heading">
+          {topic.label} <span class="tag-count">{topic.posts.length} {topic.posts.length === 1 ? 'post' : 'posts'}</span>
+        </h2>
+        <hr class="tag-section-rule">
+
+        {topic.posts.map((post) => (
+          <PostCard
+            href={`/posts/${post.id}`}
+            date={post.data.date}
+            category={post.data.category}
+            title={post.data.title}
+            desc={post.data.description}
+          />
+        ))}
+      </section>
+    ))}
+  </main>
+</BaseLayout>

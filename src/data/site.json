@@ -1,0 +1,32 @@
+{
+    "title": "Stack0",
+    "author": "Etim Daniel Udeme",
+    "description": "A blog about backend systems, the concepts behind them, and the occasional take on the tools and stacks I work with",
+    "url": "https://stack0.vercel.app",
+    "social": {
+        "email": "etimdnl41@gmail.com",
+        "x": "https://x.com/just_udeme",
+        "github": "https://github.com/Dannys-notepad",
+        "rss": "/rss.xml"
+    },
+    "nav": {
+        "search": {
+            "label": "Search",
+            "href": "/search"
+        },
+        "writing": {
+            "label": "Writing",
+            "links": [
+                {"label": "About", "href": "/about"},
+                {"label": "Projects", "href": "/projects"}
+            ]
+        },
+        "more": {
+            "label": "More",
+            "links": [
+                {"label": "About", "href": "/about"},
+                {"label": "Projects", "href": "/projects"}
+            ]
+        }
+    }
+}

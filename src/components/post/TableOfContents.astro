@@ -1,0 +1,25 @@
+---
+interface Props {
+  headings: { depth: number; slug: string; text: string }[];
+}
+
+const { headings } = Astro.props;
+
+// Only h2 and h3 appear in the TOC. h4s are too granular.
+const filtered = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+{filtered.length > 0 && (
+  <aside class="toc-wrap">
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">On this page</div>
+      <div class="toc-list" id="tocList">
+        {filtered.map((h) => (
+          <a href={`#${h.slug}`} class={h.depth === 3 ? 'toc-h3' : ''}>
+            {h.text}
+          </a>
+        ))}
+      </div>
+    </nav>
+  </aside>
+)}

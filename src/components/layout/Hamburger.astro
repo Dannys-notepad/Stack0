@@ -1,0 +1,40 @@
+---
+import site from '../../data/site.json';
+---
+
+<div class="hamburger-wrap" id="hamburgerWrap">
+  <button
+    class="hamburger-btn"
+    id="hamburgerBtn"
+    aria-label="Menu"
+    aria-expanded="false"
+  >
+    <span></span><span></span><span></span>
+  </button>
+
+  <nav class="hamburger-dropdown">
+    <div class="dropdown-col">
+      <a class="dropdown-search" href={site.nav.search.href}>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7"/>
+          <path d="M21 21l-4.3-4.3"/>
+        </svg>
+        {site.nav.search.label}
+      </a>
+    </div>
+
+    <div class="dropdown-col">
+      <div class="dropdown-label">{site.nav.writing.label}</div>
+      {site.nav.writing.links.map((link) => (
+        <a href={link.href}>{link.label}</a>
+      ))}
+    </div>
+
+    <div class="dropdown-col">
+      <div class="dropdown-label">{site.nav.more.label}</div>
+      {site.nav.more.links.map((link) => (
+        <a href={link.href}>{link.label}</a>
+      ))}
+    </div>
+  </nav>
+</div>

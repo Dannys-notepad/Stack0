@@ -1,0 +1,33 @@
+---
+import { getCollection } from 'astro:content';
+import PostLayout from '../../layouts/PostLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }) => !data.draft);
+
+  const sorted = posts.sort(
+    (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+  );
+
+  return sorted.map((post, index) => {
+    const related = sorted
+      .filter((p) => p.id !== post.id)
+      .filter((p) => p.data.category === post.data.category)
+      .slice(0, 3);
+
+    return {
+      params: { slug: post.id },
+      props: {
+        post,
+        prev: sorted[index + 1],
+        next: sorted[index - 1],
+        related
+      }
+    };
+  });
+}
+
+const { post, prev, next, related } = Astro.props;
+---
+
+<PostLayout post={post} prev={prev} next={next} related={related} />

@@ -1,0 +1,66 @@
+---
+import site from '../data/site.json';
+import TopBar from '../components/layout/TopBar.astro';
+import Footer from '../components/layout/Footer.astro';
+import '../styles/base.css';
+import '../styles/components.css';
+import '../styles/starfield.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  showNewsletter?: boolean;
+}
+
+const {
+  title = site.title,
+  description = site.description,
+  showNewsletter = true
+} = Astro.props;
+
+const pageTitle = title === site.title ? title : `${title} · ${site.title}`;
+const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>{pageTitle}</title>
+  <meta name="description" content={description}>
+  <link rel="canonical" href={canonical}>
+
+  <meta property="og:title" content={pageTitle}>
+  <meta property="og:description" content={description}>
+  <meta property="og:url" content={canonical}>
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content={site.title}>
+
+  <link rel="alternate" type="application/rss+xml" title={site.title} href="/rss.xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+</head>
+<body id="top">
+
+  <TopBar />
+
+  <div class="page-frame">
+    <span class="cross-marker" id="crossMarker"></span>
+    <slot />
+    <Footer showNewsletter={showNewsletter} />
+  </div>
+
+  <script>
+    import '../scripts/global.js';
+  </script>
+</body>
+</html>

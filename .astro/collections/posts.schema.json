@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "GO",
+        "JavaScript",
+        "API"
+      ]
+    },
+    "tags": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "js",
+          "go",
+          "dsa",
+          "backend",
+          "api-design",
+          "database",
+          "postgres",
+          "devops",
+          "tooling"
+        ]
+      }
+    },
+    "draft": {
+      "default": false,
+      "type": "boolean"
+    },
+    "$schema": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "description",
+    "date",
+    "category"
+  ]
+}

@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BackLink from '../components/common/BackLink.astro';
+
+const token = Astro.url.searchParams.get('token');
+---
+
+<BaseLayout
+  title="Unsubscribe"
+  description="Unsubscribe from the Stack0 newsletter."
+  showNewsletter={false}
+>
+  <BackLink href="/" label="Back to all posts" />
+
+  <main>
+    <header class="search-page-header">
+      <h1 class="search-page-title">Unsubscribe</h1>
+      <p class="search-page-desc">Remove this email from the Stack0 newsletter.</p>
+    </header>
+
+    {!token && (
+      <p class="unsubscribe-note">
+        This link is missing its unsubscribe token. Use the link at the bottom of
+        any newsletter email, or email me directly and I'll remove you manually.
+      </p>
+    )}
+
+    {token && (
+      <>
+        <div id="unsubscribeLoading" class="unsubscribe-status">
+          <p>Removing you from the list…</p>
+        </div>
+
+        <div id="unsubscribeSuccess" class="unsubscribe-status" style="display:none;">
+          <p><strong>Done.</strong> You've been removed. No further emails will arrive.</p>
+          <p><a href="/">Back to the homepage</a></p>
+        </div>
+
+        <div id="unsubscribeError" class="unsubscribe-status" style="display:none;">
+          <p><strong>Something went wrong.</strong> The token may have expired or already been used.</p>
+          <p>Email me directly if you'd like to be removed.</p>
+        </div>
+      </>
+    )}
+  </main>
+</BaseLayout>
+
+{token && (
+  <script define:vars={{ token }}>
+    (async function () {
+      var loadingEl = document.getElementById('unsubscribeLoading');
+      var successEl = document.getElementById('unsubscribeSuccess');
+      var errorEl = document.getElementById('unsubscribeError');
+
+      try {
+        var res = await fetch('/api/newsletter/unsubscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: token })
+        });
+
+        if (res.ok) {
+          loadingEl.style.display = 'none';
+          successEl.style.display = 'block';
+        } else {
+          loadingEl.style.display = 'none';
+          errorEl.style.display = 'block';
+        }
+      } catch (err) {
+        loadingEl.style.display = 'none';
+        errorEl.style.display = 'block';
+      }
+    })();
+  </script>
+)}

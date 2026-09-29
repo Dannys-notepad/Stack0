@@ -1,0 +1,13 @@
+---
+import site from '../../data/site.json';
+import Hamburger from './Hamburger.astro';
+---
+
+<div class="top-bar">
+  <div class="top-bar-inner">
+    <div class="site-title">
+      <a href="/">{site.title}.</a>
+    </div>
+    <Hamburger />
+  </div>
+</div>

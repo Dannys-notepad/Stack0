@@ -1,0 +1,58 @@
+---
+import { render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import BackLink from '../components/common/BackLink.astro';
+import Prose from '../components/common/Prose.astro';
+import PostHeader from '../components/post/PostHeader.astro';
+import PostTags from '../components/post/PostTags.astro';
+import ShareRow from '../components/post/ShareRow.astro';
+import AuthorBio from '../components/post/AuthorBio.astro';
+import PostNav from '../components/post/PostNav.astro';
+import TableOfContents from '../components/post/TableOfContents.astro';
+import RelatedPosts from '../components/post/RelatedPosts.astro';
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+  prev?: CollectionEntry<'posts'>;
+  next?: CollectionEntry<'posts'>;
+  related: CollectionEntry<'posts'>[];
+}
+
+const { post, prev, next, related } = Astro.props;
+const { Content, headings } = await render(post);
+---
+
+<BaseLayout title={post.data.title} description={post.data.description}>
+  <BackLink href="/" label="Back to all posts" />
+
+  <article>
+    <PostHeader
+      title={post.data.title}
+      description={post.data.description}
+      category={post.data.category}
+      date={post.data.date}
+    />
+
+    <div class="post-layout">
+      <div class="post-body">
+        <Prose>
+          <Content />
+        </Prose>
+
+        {post.data.tags.length > 0 && <PostTags tags={post.data.tags} />}
+        <ShareRow title={post.data.title} />
+        <AuthorBio />
+        <PostNav prev={prev} next={next} />
+      </div>
+
+      {headings.length > 0 && <TableOfContents headings={headings} />}
+    </div>
+  </article>
+
+  {related.length > 0 && <RelatedPosts posts={related} />}
+</BaseLayout>
+
+<script>
+  import '../scripts/post.js';
+</script>

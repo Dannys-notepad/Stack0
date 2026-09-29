@@ -1,0 +1,52 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/post/PostCard.astro';
+import Pagination from '../../components/common/Pagination.astro';
+
+const POSTS_PER_PAGE = 10;
+
+export async function getStaticPaths() {
+  const allPosts = (await getCollection('posts', ({ data }) => !data.draft))
+    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+  const featured = allPosts.find((post) => post.data.featured) ?? allPosts[0];
+  const rest = allPosts.filter((post) => post.id !== featured?.id);
+
+  const totalPages = Math.ceil(rest.length / POSTS_PER_PAGE);
+
+  const paths = [];
+  for (let page = 2; page <= totalPages; page++) {
+    const start = (page - 1) * POSTS_PER_PAGE;
+    const end = start + POSTS_PER_PAGE;
+    paths.push({
+      params: { page: String(page) },
+      props: {
+        posts: rest.slice(start, end),
+        currentPage: page,
+        totalPages
+      }
+    });
+  }
+
+  return paths;
+}
+
+const { posts, currentPage, totalPages } = Astro.props;
+---
+
+<BaseLayout title={`Page ${currentPage}`} description={`Page ${currentPage} of posts from Stack0.`}>
+  <h1 class="page-heading">Page {currentPage}</h1>
+
+  {posts.map((post) => (
+    <PostCard
+      href={`/posts/${post.id}`}
+      date={post.data.date}
+      category={post.data.category}
+      title={post.data.title}
+      desc={post.data.description}
+    />
+  ))}
+
+  <Pagination currentPage={currentPage} totalPages={totalPages} />
+  </BaseLayout>

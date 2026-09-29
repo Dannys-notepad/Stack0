@@ -1,0 +1,20 @@
+{
+  "topics": [
+    { "slug": "js",         "label": "JavaScript",  "description": "Posts about JavaScript, the language, its runtimes, and its quirks." },
+    { "slug": "go",         "label": "Go",          "description": "Posts about Go — the language, its toolchain, and its internals." },
+    { "slug": "dsa",        "label": "DSA",         "description": "Data structures, algorithms, and the reasoning behind picking one." },
+    { "slug": "backend",    "label": "Backend",     "description": "Backend engineering — request handling, services, and the systems around them." },
+    { "slug": "api-design", "label": "API Design",  "description": "Designing APIs that are usable, predictable, and hard to misuse." },
+    { "slug": "databases",  "label": "Databases",   "description": "Database internals, query patterns, and the tradeoffs between them." },
+    { "slug": "postgres",   "label": "Postgres",    "description": "Postgres-specific posts — features, gotchas, and internals." },
+    { "slug": "devops",     "label": "DevOps",      "description": "Deployment, CI/CD, infrastructure, and keeping things running." },
+    { "slug": "tooling",    "label": "Tooling",     "description": "Editors, CLIs, build tools, and the small things that add up." }
+  ],
+  "categories": [
+    { "slug": "Go",     "label": "Go",     "description": "Posts primarily about Go." },
+    { "slug": "Shards", "label": "Shards", "description": "Short notes on language proposals and accepted changes." },
+    { "slug": "System", "label": "System", "description": "Posts about systems, infrastructure, and how things fit together." },
+    { "slug": "Zephyr", "label": "Zephyr", "description": "Longer opinion pieces and arguments." },
+    { "slug": "Misc",   "label": "Misc",   "description": "Everything else — tools, setups, and one-off posts." }
+  ]
+}

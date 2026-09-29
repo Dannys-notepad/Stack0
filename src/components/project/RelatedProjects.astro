@@ -1,0 +1,28 @@
+---
+import ProjectCard from './ProjectCard.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  projects: CollectionEntry<'projects'>[];
+}
+
+const { projects } = Astro.props;
+---
+
+{projects.length > 0 && (
+  <section class="related-posts">
+    <h2 class="section-title">More projects</h2>
+    <div class="projects-grid">
+      {projects.map((project) => (
+        <ProjectCard
+          href={`/projects/${project.id}`}
+          title={project.data.title}
+          desc={project.data.description}
+          stack={project.data.stack}
+          status={project.data.status}
+          openSource={project.data.openSource}
+        />
+      ))}
+    </div>
+  </section>
+)}

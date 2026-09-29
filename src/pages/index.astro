@@ -1,0 +1,64 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FeaturedPost from '../components/post/FeaturedPost.astro';
+import PostCard from '../components/post/PostCard.astro';
+import Pagination from '../components/common/Pagination.astro';
+
+const POSTS_PER_PAGE = 10;
+
+const allPosts = (await getCollection('posts', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const featured = allPosts.find((post) => post.data.featured) ?? allPosts[0];
+const rest = allPosts.filter((post) => post.id !== featured?.id);
+const pageOne = rest.slice(0, POSTS_PER_PAGE);
+
+const totalPages = Math.ceil(rest.length / POSTS_PER_PAGE);
+---
+
+<BaseLayout>
+  <header class="site-header">
+    <img class="about-avatar" src="/assets/img/me.jpg" width="96" height="96" alt="Profile photo">
+    <h1 class="hero">Hi, I'm Udeme.</h1>
+    <p class="tagline">I'm a self-taught backend engineer, and a 3rd year Industrial Chemistry student.</p>
+    <div class="social-links">
+      <a href="mailto:etimdnl41@gmail.com" aria-label="Email" title="Email">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 6l10 7 10-7"/></svg>
+      </a>
+      <a href="https://x.com/just_udeme" aria-label="X" title="X">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.6 8.7L23.3 22H16.9l-5-6.6-5.7 6.6H2.1l8.1-9.3L1.5 2h6.6l4.5 6.1L18.9 2Zm-1.1 18h1.7L7.3 3.9H5.5L17.8 20Z"/></svg>
+      </a>
+      <a href="https://github.com/Dannys-notepad" aria-label="GitHub" title="GitHub">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.6 2 12.2c0 4.5 2.9 8.3 6.8 9.6.5.1.7-.2.7-.5v-1.9c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .9.1-.7.4-1.1.6-1.4-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.4.1-2.8 0 0 .8-.3 2.7 1a9 9 0 0 1 4.9 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.8.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7 1 .7 2v3c0 .3.2.6.7.5 3.9-1.3 6.8-5.1 6.8-9.6C22 6.6 17.5 2 12 2Z"/></svg>
+      </a>
+      <a href="/rss.xml" aria-label="RSS" title="RSS">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="5" cy="19" r="1.5" fill="currentColor" stroke="none"/><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/></svg>
+      </a>
+    </div>
+  </header>
+
+  {featured && (
+    <FeaturedPost
+      href={`/posts/${featured.id}`}
+      category={featured.data.category}
+      date={featured.data.date}
+      title={featured.data.title}
+      desc={featured.data.description}
+    />
+  )}
+
+  <h2 class="section-title">More writing</h2>
+
+  {pageOne.map((post) => (
+    <PostCard
+      href={`/posts/${post.id}`}
+      date={post.data.date}
+      category={post.data.category}
+      title={post.data.title}
+      desc={post.data.description}
+    />
+  ))}
+
+  <Pagination currentPage={1} totalPages={totalPages} />
+  </BaseLayout>

@@ -1,0 +1,23 @@
+---
+import { formatDate } from '../../lib/format-date';
+
+interface Props {
+  title: string;
+  description: string;
+  category: string;
+  date: Date;
+}
+
+const { title, description, category, date } = Astro.props;
+const formattedDate = formatDate(date);
+---
+
+<header class="post-page-header">
+  <div class="post-page-eyebrow">
+    <span class="tag">{category}</span>
+    <span class="dot">·</span>
+    <span>{formattedDate}</span>
+  </div>
+  <h1 class="post-page-title">{title}</h1>
+  <p class="post-page-desc">{description}</p>
+</header>

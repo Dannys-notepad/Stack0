@@ -1,0 +1,28 @@
+---
+import Newsletter from '../newsletter/Newsletter.astro';
+
+interface Props {
+  showNewsletter?: boolean;
+}
+
+const { showNewsletter = true } = Astro.props;
+---
+
+<footer>
+  {showNewsletter && <Newsletter />}
+
+  <div class="footer-links">
+    <a href="/">home</a>
+    <a href="/tags">tags</a>
+    <a href="/about">about</a>
+  </div>
+
+  <div>© 2026 <a href="/">Etim Daniel Udeme</a></div>
+
+  <a href="#top" id="back-to-top" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M12 19V5"/>
+      <path d="M5 12l7-7 7 7"/>
+    </svg>
+  </a>
+</footer>

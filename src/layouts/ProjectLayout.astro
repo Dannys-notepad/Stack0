@@ -1,0 +1,44 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import BackLink from '../components/common/BackLink.astro';
+import Prose from '../components/common/Prose.astro';
+import ProjectHeader from '../components/project/ProjectHeader.astro';
+import ProjectStack from '../components/project/ProjectStack.astro';
+import RelatedProjects from '../components/project/RelatedProjects.astro';
+import type { CollectionEntry } from 'astro:content';
+import { render } from 'astro:content'
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+  related: CollectionEntry<'projects'>[];
+}
+
+const { project, related } = Astro.props;
+const { Content } = await render(project);
+---
+
+<BaseLayout title={project.data.title} description={project.data.description}>
+  <BackLink href="/about" label="Back to about" />
+
+  <article>
+    <ProjectHeader
+      title={project.data.title}
+      description={project.data.description}
+      status={project.data.status}
+      startDate={project.data.startDate}
+      endDate={project.data.endDate}
+      repo={project.data.repo}
+      live={project.data.live}
+    />
+
+    <div class="project-layout">
+      <ProjectStack stack={project.data.stack} />
+
+      <Prose>
+        <Content />
+      </Prose>
+    </div>
+  </article>
+
+  <RelatedProjects projects={related} />
+  </BaseLayout>

@@ -1,0 +1,91 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BackLink from '../components/common/BackLink.astro';
+import { formatDate } from '../lib/format-date';
+
+const allPosts = (await getCollection('posts', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const searchData = allPosts.map((post) => ({
+  title: post.data.title,
+  desc: post.data.description,
+  date: formatDate(post.data.date),
+  category: post.data.category,
+  tags: post.data.tags,
+  href: `/posts/${post.id}`
+}));
+
+// Unique categories, for the filter chips.
+const categories = ['all', ...Array.from(new Set(allPosts.map((p) => p.data.category)))];
+---
+
+<BaseLayout title="Search" description="Find a post by title, description, or tag.">
+  <BackLink href="/" label="Back to all posts" />
+
+  <main>
+    <header class="search-page-header">
+      <h1 class="search-page-title">Search</h1>
+      <p class="search-page-desc">Find a post by title, description, or tag.</p>
+
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7"/>
+          <path d="M21 21l-4.3-4.3"/>
+        </svg>
+        <label for="searchInput" class="sr-only">Search posts</label>
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search posts…"
+          autocomplete="off"
+          autofocus
+        >
+        <span class="search-kbd">/</span>
+      </div>
+
+      <div class="search-filters" id="searchFilters">
+        {categories.map((cat, i) => (
+          <button
+            class={`search-filter-chip ${i === 0 ? 'active' : ''}`}
+            data-tag={cat}
+            type="button"
+          >
+            {cat === 'all' ? 'All' : cat}
+          </button>
+        ))}
+      </div>
+    </header>
+
+    <p class="search-results-meta" id="resultsMeta"></p>
+
+    <div id="resultsList">
+      {allPosts.map((post) => (
+        <article class="post">
+          <div class="post-meta">
+            <span>{formatDate(post.data.date)}</span>
+            <span class="dot">·</span>
+            <span class="tag">{post.data.category}</span>
+          </div>
+          <a class="post-title" href={`/posts/${post.id}`}>{post.data.title}</a>
+          <p class="post-desc">{post.data.description}</p>
+        </article>
+      ))}
+    </div>
+
+    <div class="search-empty" id="emptyState" style="display:none;">
+      <p class="search-empty-title">No posts found</p>
+      <p>Try a different word, or clear the tag filter.</p>
+    </div>
+  </main>
+
+  <script
+    type="application/json"
+    id="searchData"
+    set:html={JSON.stringify(searchData)}
+  ></script>
+</BaseLayout>
+
+<script>
+  import '../scripts/search.js';
+  </script>

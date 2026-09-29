@@ -1,0 +1,30 @@
+{
+  "name": "stack0",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dannys-notepad/Stack0.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Dannys-notepad/Stack0/issues"
+  },
+  "homepage": "https://github.com/Dannys-notepad/Stack0#readme",
+  "dependencies": {
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^7.3.5"
+  }
+}

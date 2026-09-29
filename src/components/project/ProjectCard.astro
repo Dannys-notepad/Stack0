@@ -1,0 +1,35 @@
+---
+interface Props {
+  href: string;
+  title: string;
+  desc: string;
+  stack: string[];
+  status: 'active' | 'wip' | 'paused' | 'archived';
+  openSource?: boolean;
+}
+
+const { href, title, desc, stack, status, openSource = false } = Astro.props;
+
+const statusLabel = {
+  active: 'Active',
+  wip: 'In progress',
+  paused: 'Paused',
+  archived: 'Archived'
+}[status];
+---
+
+<a class="project-card" href={href}>
+  <div class="project-card-title">
+    {title}
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M7 17L17 7"/>
+      <path d="M7 7h10v10"/>
+    </svg>
+  </div>
+  <p class="project-card-desc">{desc}</p>
+  <div class="project-card-meta">
+    {stack.map((s) => <span>{s}</span>)}
+    {openSource && <span>Open source</span>}
+    <span>{statusLabel}</span>
+  </div>
+</a>

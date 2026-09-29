@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "wip",
+        "paused",
+        "archived"
+      ]
+    },
+    "startDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "endDate": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "repo": {
+      "type": "string",
+      "format": "uri"
+    },
+    "live": {
+      "type": "string",
+      "format": "uri"
+    },
+    "stack": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "featured": {
+      "default": false,
+      "type": "boolean"
+    },
+    "order": {
+      "default": 999,
+      "type": "number"
+    },
+    "openSource": {
+      "default": false,
+      "type": "boolean"
+    },
+    "$schema": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "description",
+    "status",
+    "startDate"
+  ]
+}

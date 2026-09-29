@@ -1,0 +1,13 @@
+---
+interface Props {
+  stack: string[];
+}
+
+const { stack } = Astro.props;
+---
+
+{stack.length > 0 && (
+  <div class="project-stack">
+    {stack.map((s) => <span>{s}</span>)}
+  </div>
+)}

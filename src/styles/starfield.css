@@ -1,0 +1,116 @@
+/* ============================================
+   starfield.css
+   Deep-space gradient, outer starfield,
+   inside-frame starfield, and meteor.
+   Remove this file (or comment its import) to
+   disable the cosmos layers entirely.
+   ============================================ */
+
+/* ---------- Layer 1: deep-space gradient ---------- */
+body::before{
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 40%,
+      rgba(30, 40, 55, 0.35),
+      rgba(10, 10, 10, 0) 70%),
+    radial-gradient(ellipse 60% 80% at 20% 80%,
+      rgba(50, 35, 30, 0.18),
+      rgba(10, 10, 10, 0) 70%),
+    #060608;
+  z-index: -3;
+  pointer-events: none;
+}
+
+/* ---------- Layer 2: outer starfield ---------- */
+body::after{
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 12% 18%, rgba(230,230,240,0.85), transparent 60%),
+    radial-gradient(1px 1px at 27% 42%, rgba(200,200,220,0.55), transparent 60%),
+    radial-gradient(1.2px 1.2px at 41% 9%,  rgba(255,255,255,0.9), transparent 60%),
+    radial-gradient(1px 1px at 58% 33%, rgba(210,210,230,0.6), transparent 60%),
+    radial-gradient(1px 1px at 73% 21%, rgba(230,230,240,0.75), transparent 60%),
+    radial-gradient(1.4px 1.4px at 88% 47%, rgba(255,255,255,0.85), transparent 60%),
+    radial-gradient(1px 1px at 8% 63%,  rgba(200,200,220,0.5), transparent 60%),
+    radial-gradient(1px 1px at 22% 77%, rgba(230,230,240,0.65), transparent 60%),
+    radial-gradient(1.2px 1.2px at 47% 68%, rgba(255,255,255,0.8), transparent 60%),
+    radial-gradient(1px 1px at 63% 88%, rgba(210,210,230,0.55), transparent 60%),
+    radial-gradient(1px 1px at 81% 72%, rgba(230,230,240,0.7), transparent 60%),
+    radial-gradient(1px 1px at 94% 91%, rgba(200,200,220,0.5), transparent 60%),
+    radial-gradient(1px 1px at 35% 55%, rgba(230,230,240,0.6), transparent 60%),
+    radial-gradient(1px 1px at 55% 51%, rgba(200,200,220,0.45), transparent 60%),
+    radial-gradient(1px 1px at 15% 35%, rgba(230,230,240,0.7), transparent 60%),
+    radial-gradient(1px 1px at 68% 12%, rgba(255,255,255,0.75), transparent 60%),
+    radial-gradient(1px 1px at 44% 81%, rgba(210,210,230,0.5), transparent 60%),
+    radial-gradient(1px 1px at 91% 28%, rgba(230,230,240,0.6), transparent 60%);
+  background-size: 100% 100%;
+  z-index: -2;
+  pointer-events: none;
+}
+
+/* ---------- Layer 3: starfield inside the frame ---------- */
+.page-frame::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 15% 22%, rgba(230,230,240,0.35), transparent 60%),
+    radial-gradient(1px 1px at 32% 61%, rgba(200,200,220,0.28), transparent 60%),
+    radial-gradient(1.2px 1.2px at 54% 14%, rgba(255,255,255,0.42), transparent 60%),
+    radial-gradient(1px 1px at 71% 47%, rgba(210,210,230,0.3), transparent 60%),
+    radial-gradient(1px 1px at 88% 78%, rgba(230,230,240,0.38), transparent 60%),
+    radial-gradient(1px 1px at 24% 85%, rgba(200,200,220,0.25), transparent 60%),
+    radial-gradient(1.2px 1.2px at 62% 68%, rgba(255,255,255,0.35), transparent 60%),
+    radial-gradient(1px 1px at 43% 38%, rgba(210,210,230,0.3), transparent 60%),
+    radial-gradient(1px 1px at 78% 18%, rgba(230,230,240,0.32), transparent 60%),
+    radial-gradient(1px 1px at 9% 55%,  rgba(200,200,220,0.22), transparent 60%),
+    radial-gradient(1px 1px at 95% 39%, rgba(230,230,240,0.3), transparent 60%),
+    radial-gradient(1px 1px at 50% 92%, rgba(210,210,230,0.25), transparent 60%);
+  z-index: 0;
+  pointer-events: none;
+  mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, black 55%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, black 55%, transparent 100%);
+}
+
+/* ---------- Slow drift on the outer starfield ---------- */
+@media (prefers-reduced-motion: no-preference){
+  body::after{
+    animation: drift 180s linear infinite;
+  }
+}
+
+@keyframes drift{
+  from{ transform: translate3d(0, 0, 0); }
+  to{ transform: translate3d(-2%, -1%, 0); }
+}
+
+/* ---------- Meteor ---------- */
+.meteor{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 140px;
+  height: 1.5px;
+  pointer-events: none;
+  z-index: 5;
+  background: linear-gradient(90deg,
+    rgba(127, 183, 201, 0) 0%,
+    rgba(127, 183, 201, 0.05) 40%,
+    rgba(150, 190, 210, 0.22) 85%,
+    rgba(180, 210, 225, 0.42) 100%);
+  border-radius: 999px;
+  filter: drop-shadow(0 0 3px rgba(150, 190, 210, 0.12));
+  opacity: 0;
+  will-change: transform, opacity;
+  transform-origin: right center;
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce){
+  .meteor{ display: none; }
+  body::after{ animation: none; }
+}
