@@ -1,67 +1,58 @@
 ---
 title: "Verse"
-description: "A Telegram-based AI assistant — chat interface, tool use, and a small plugin system for adding capabilities without redeploying."
+description: "A Telegram-based AI chatbot built with Node.js and Express — context-aware conversations, web search, and Firebase-backed user and token management."
 status: "active"
 startDate: 2025-09-01
 endDate: null
 repo: "https://github.com/Dannys-notepad/verse"
 live: "https://t.me/UdemeAVXBot"
-stack: ["JavaScript", "Node.js", "Firebase", "Telegram Bot API", "OpenAI API"]
+stack: ["JavaScript", "Node.js", "Express", "Firebase", "Telegram Bot API", "Gemini API", "Tavily"]
 featured: true
 order: 1
 openSource: true
 ---
 
-Verse started as a way to stop copy-pasting ChatGPT answers into Telegram. It's now a small bot that keeps conversation state, calls tools when it needs to, and lets me add new capabilities without touching the core.
+Verse is a Telegram-based AI chatbot. It holds context-aware conversations, searches the web when an answer needs fresh information, and keeps track of users and their access through Firebase. Telegram is the only platform live today; the structure is set up so WhatsApp and others can be added later.
 
 ## What it does
 
-- Keeps per-chat conversation history in Postgres
-- Calls a small set of tools (web search, shell, a calculator) when the model decides to
-- Loads plugins from a directory at startup — drop a `.go` file in, rebuild, done
-- Streams responses back to Telegram as they arrive
-
-## Why I built it
-
-I wanted something I could use from my phone without opening a browser tab. The existing bots either locked you into a single model or wanted a subscription. This one is mine, runs on a cheap VPS, and I understand every line.
-
-> The whole thing is about 900 lines of Go. That's the point — it should stay small enough to read in one sitting.
+- Generates context-aware AI responses through configurable providers (Gemini, with API key rotation across multiple keys)
+- Searches the web via Tavily for up-to-date answers
+- Manages users and token-based access in Firebase
+- Runs Telegram in webhook mode in production, or polling mode locally with no HTTPS needed
+- Stores messages encrypted, using a key from the environment
+- Logs requests and errors, shuts down gracefully, and includes an optional memory watchdog that can restart the process
 
 ## Architecture
 
-Two processes:
+A single Express app boots the platform clients and wires them to the shared services:
 
-1. **The bot** — long-polls Telegram, handles commands, manages conversation state
-2. **The worker** — picks up jobs from a Postgres queue, calls the model, writes results back
+- `app.js` — server startup, platform initialization, graceful shutdown
+- `platforms/telegram` — the Telegram client and message handling
+- `src/response/ai` — AI response generation
+- `src/service` and `src/models` — user validation and token handling
+- `src/db` — Firebase admin setup and the user repository
+- `src/utils` — logging and helpers
 
-They talk through the database, not through each other. This means I can restart the bot without losing in-flight work, and the worker can be scaled independently if it ever needs to be.
+Keeping each platform in its own folder under `platforms/` is what makes the multi-platform goal realistic: a new platform only needs its own client, and the AI, user and database layers stay the same.
 
-## The plugin system
+## Running it
 
-Plugins implement one interface:
+Requires Node.js 18+, `pnpm` (or `npm`), Firebase service account credentials and a Telegram bot token.
 
-```go
-type Plugin interface {
-    Name() string
-    Description() string
-    Schema() json.RawMessage
-    Run(ctx context.Context, args json.RawMessage) (string, error)
-}
+```bash
+cp .env.example .env   # fill in your values
+pnpm install
+pnpm start
 ```
 
-At startup, the bot walks `plugins/`, `go:embeds` the directory, and registers each one with the tool-use loop. Adding a new tool is one file.
-
-## What I'd do differently
-
-- The Postgres queue works, but `LISTEN/NOTIFY` would be simpler than polling
-- Conversation history grows unbounded — needs summarization
-- The plugin interface is close to right, but `Run` should return a structured result, not a string
+Configuration is all environment variables: Gemini and Tavily keys, model settings (default model, max tokens, temperature, timeout), Telegram mode and webhook settings, and the Firebase service account JSON as a single value. The full list is in the repo README.
 
 ## Status
 
-Active. I use it daily. Updates happen when something annoys me enough.
+Active. Telegram is the only live platform for now.
 
 ## Links
 
 - [Repository](https://github.com/Dannys-notepad/verse)
-- [Try it on Telegram](https://t.me/versebot)
+- [Try it on Telegram](https://t.me/UdemeAVXBot)
