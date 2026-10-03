@@ -1,8 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
-import BaseLayout from '../layouts/BaseLayout.astro';
-import BackLink from '../components/common/BackLink.astro';
-import ProjectCard from '../components/project/ProjectCard.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BackLink from '../../components/common/BackLink.astro';
+import ProjectCard from '../../components/project/ProjectCard.astro';
 
 const projects = (await getCollection('projects'))
   .sort((a, b) => {
