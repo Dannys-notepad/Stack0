@@ -3,7 +3,7 @@ title: "Debugging idempotency in Express + Firestore"
 description: "An idempotency middleware for Express on Firestore looked correct on paper, then two racing requests produced a 500 on the winner, a 409 on the loser, and, worst of all, two users with the same email. Here's the full debugging trail."
 date: 2026-10-03
 category: "NODE"
-tags: ["node", "express", "firestore", "idempotency", "debugging"]
+tags: ["node", "express", "firebase", "idempotency", "debugging"]
 draft: false
 ---
 
