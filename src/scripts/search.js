@@ -1,8 +1,9 @@
 // ============================================
 // search.js
 // Search page only: filter posts by tag and query,
-// render matches with highlighting.
+// render matches with highlighting and view counts.
 // Reads data from the #searchData JSON script tag.
+// Fetches view counts once from /api/views/all.
 // Loaded only by search.astro.
 // ============================================
 
@@ -19,6 +20,7 @@
   if(!input || !list || !meta || !empty || !filters) return;
 
   var activeTag = 'all';
+  var counts = {};
 
   function escapeHtml(s){
     return String(s).replace(/[&<>"']/g, function(c){
@@ -42,6 +44,15 @@
     );
   }
 
+  function formatCount(n){
+    return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
+  function viewCountFor(slug){
+    var n = counts[slug];
+    return typeof n === 'number' ? formatCount(n) : '—';
+  }
+
   function render(){
     var q = input.value.trim().toLowerCase();
 
@@ -61,6 +72,14 @@
           '<span>' + escapeHtml(p.date) + '</span>' +
           '<span class="dot">·</span>' +
           '<span class="tag">' + escapeHtml(p.category) + '</span>' +
+          '<span class="dot">·</span>' +
+          '<span class="meta-icon">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' +
+              '<path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/>' +
+              '<circle cx="12" cy="12" r="3"/>' +
+            '</svg>' +
+            '<span>' + viewCountFor(p.slug) + '</span>' +
+          '</span>' +
         '</div>' +
         '<a class="post-title" href="' + escapeHtml(p.href) + '">' +
           highlight(p.title, q) +
@@ -100,5 +119,17 @@
     }
   });
 
+  // Fetch view counts once, then re-render so they appear.
+  fetch('/api/views/all')
+    .then(function(res){ return res.ok ? res.json() : {}; })
+    .then(function(data){
+      counts = data || {};
+      render();
+    })
+    .catch(function(){
+      // Silent fail: counts stay as em-dashes.
+    });
+
+  // Initial render, before counts arrive.
   render();
 })();

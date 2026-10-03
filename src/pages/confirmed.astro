@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Confirmed" description="You're subscribed." showNewsletter={false}>
+  <main class="error-main">
+    <div class="error-glyph-wrap" style="color: var(--accent); background: rgba(127,183,201,0.08); border-color: rgba(127,183,201,0.25);">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28">
+        <path d="M20 6L9 17l-5-5"/>
+      </svg>
+    </div>
+    <p class="error-eyebrow">Confirmed</p>
+    <h1 class="error-title">You're subscribed</h1>
+    <p class="error-desc">
+      Your email has been verified. You'll receive an email when the next post goes up.
+    </p>
+    <div class="error-actions">
+      <a class="error-btn primary" href="/">Back to homepage</a>
+    </div>
+  </main>
+</BaseLayout>

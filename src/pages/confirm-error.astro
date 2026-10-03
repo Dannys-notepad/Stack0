@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Confirmation failed" description="This link didn't work." showNewsletter={false}>
+  <main class="error-main">
+    <div class="error-glyph-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 8v4"/>
+        <path d="M12 16h.01"/>
+      </svg>
+    </div>
+    <p class="error-eyebrow">Confirmation failed</p>
+    <h1 class="error-title">This link didn't work</h1>
+    <p class="error-desc">
+      The confirmation link is invalid or has expired. Try subscribing again from
+      the footer of any post, or email me directly if the problem persists.
+    </p>
+    <div class="error-actions">
+      <a class="error-btn primary" href="/">Back to homepage</a>
+    </div>
+  </main>
+</BaseLayout>

@@ -6,9 +6,10 @@ interface Props {
   description: string;
   category: string;
   date: Date;
+  slug: string;
 }
 
-const { title, description, category, date } = Astro.props;
+const { title, description, category, date, slug } = Astro.props;
 const formattedDate = formatDate(date);
 ---
 
@@ -20,4 +21,13 @@ const formattedDate = formatDate(date);
   </div>
   <h1 class="post-page-title">{title}</h1>
   <p class="post-page-desc">{description}</p>
+  <div class="post-page-meta">
+    <span class="meta-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/>
+        <circle cx="12" cy="12" r="3"/>
+      </svg>
+      <span id="postViewCount" data-views-slug={slug}>—</span>
+    </span>
+  </div>
 </header>

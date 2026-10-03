@@ -1,0 +1,36 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BackLink from '../components/common/BackLink.astro';
+import ProjectCard from '../components/project/ProjectCard.astro';
+
+const projects = (await getCollection('projects'))
+  .sort((a, b) => {
+    if (a.data.order !== b.data.order) return a.data.order - b.data.order;
+    return b.data.startDate.valueOf() - a.data.startDate.valueOf();
+  });
+---
+
+<BaseLayout title="Projects" description="Things I've built — active, archived, and in progress.">
+  <BackLink href="/" label="Back to all posts" />
+
+  <main>
+    <header class="tags-page-header">
+      <h1 class="tags-page-title">Projects</h1>
+      <p class="tags-page-desc">Things I've built — active, archived, and in progress.</p>
+    </header>
+
+    <div class="projects-grid">
+      {projects.map((project) => (
+        <ProjectCard
+          href={`/projects/${project.id}`}
+          title={project.data.title}
+          desc={project.data.description}
+          stack={project.data.stack}
+          status={project.data.status}
+          openSource={project.data.openSource}
+        />
+      ))}
+    </div>
+  </main>
+</BaseLayout>

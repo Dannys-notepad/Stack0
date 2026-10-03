@@ -15,6 +15,7 @@ const heading = posts[0] ? `More on ${posts[0].data.category}` : 'Related posts'
   {posts.map((post) => (
     <PostCard
       href={`/posts/${post.id}`}
+      slug={post.id}
       date={post.data.date}
       category={post.data.category}
       title={post.data.title}

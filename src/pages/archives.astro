@@ -1,0 +1,53 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BackLink from '../components/common/BackLink.astro';
+import PostCard from '../components/post/PostCard.astro';
+
+const allPosts = (await getCollection('posts', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const postsByYear = {};
+for (const post of allPosts) {
+  const year = post.data.date.getFullYear();
+  if (!postsByYear[year]) postsByYear[year] = [];
+  postsByYear[year].push(post);
+}
+
+const years = Object.keys(postsByYear).sort((a, b) => Number(b) - Number(a));
+---
+
+<BaseLayout title="Archives" description="Every post, in reverse chronological order.">
+  <BackLink href="/" label="Back to all posts" />
+
+  <main>
+    <header class="tags-page-header">
+      <h1 class="tags-page-title">Archives</h1>
+      <p class="tags-page-desc">Every post, in reverse chronological order.</p>
+    </header>
+
+    {years.map((year) => (
+      <section class="tag-section">
+        <h2 class="tag-section-heading">
+          {year} <span class="tag-count">{postsByYear[year].length} {postsByYear[year].length === 1 ? 'post' : 'posts'}</span>
+        </h2>
+        <hr class="tag-section-rule">
+
+        {postsByYear[year].map((post) => (
+          <PostCard
+            href={`/posts/${post.id}`}
+            slug={post.id}
+            date={post.data.date}
+            category={post.data.category}
+            title={post.data.title}
+            desc={post.data.description}
+          />
+        ))}
+      </section>
+    ))}
+  </main>
+</BaseLayout>
+
+<script>
+  import '../scripts/views.js';
+</script>

@@ -6,6 +6,7 @@ import ProjectCard from '../components/project/ProjectCard.astro';
 import site from '../data/site.json';
 
 const projects = (await getCollection('projects'))
+  .filter((p) => p.data.featured)
   .sort((a, b) => {
     if (a.data.order !== b.data.order) return a.data.order - b.data.order;
     return b.data.startDate.valueOf() - a.data.startDate.valueOf();
@@ -17,7 +18,7 @@ const projects = (await getCollection('projects'))
 
   <main>
     <section class="about-intro">
-      <img class="about-avatar" src="/assets/img/me.jpg" width="96" height="96" alt="Profile photo">
+      <img class="about-avatar" src="/assets/img/me.jpeg" width="96" height="96" alt="Profile photo">
       <div>
         <h1 class="about-name">{site.author}</h1>
         <p class="about-role">Self-taught backend engineer · third-year Industrial Chemistry student</p>
@@ -39,7 +40,8 @@ const projects = (await getCollection('projects'))
     </section>
 
     <div class="prose about-bio">
-      <p>I'm a self-taught backend engineer and a third-year Industrial Chemistry student. I write about backend systems, the concepts behind them, and the occasional take on the tools and stacks I work with.</p>
+      <p>I'm a self-taught backend engineer and a third-year Industrial Chemistry student. </p>
+      <p> I write about backend work, project escapades, and my debugging process.</p>
     </div>
 
     <h2 class="section-title">Projects</h2>
@@ -55,6 +57,10 @@ const projects = (await getCollection('projects'))
         />
       ))}
     </div>
+
+    <p style="margin-top: 1.5rem;">
+      <a class="back-link" href="/projects">See all projects →</a>
+    </p>
 
     <h2 class="section-title">Skills &amp; tools</h2>
 
