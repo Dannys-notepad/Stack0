@@ -1,29 +1,29 @@
-import { VercelRequest, VercelResponse } from '@vercel/node'
-import { subscribers } from '../_lib/firebase.ts'
+import { subscribers } from '../_lib/firebase.js';
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method not allowed' })
-    }
+export default async function handler(req: Request): Promise<Response> {
+  if (req.method !== 'POST') {
+    return Response.json({ error: 'Method not allowed' }, { status: 405 });
+  }
 
-    const token = String(req.body?.token ?? '').trim()
+  const body = await req.json().catch(() => ({}));
+  const token = String((body as any)?.token ?? '').trim();
 
-    if (!token) {
-        return res.status(400).json({ error: 'Missing token' })
-    }
+  if (!token) {
+    return Response.json({ error: 'Missing token' }, { status: 400 });
+  }
 
-    const snap = await subscribers.where('toekn', '==', token).limit(1).get()
+  const snap = await subscribers.where('token', '==', token).limit(1).get();
 
-    if (snap.empty) {
-        return res.status(404).json({ error: 'Invalid token' })
-    }
+  if (snap.empty) {
+    return Response.json({ error: 'Invalid token' }, { status: 404 });
+  }
 
-    const doc = snap.docs[0]
-    await doc.ref.update({
-        status: 'unsubscribe',
-        token: null,
-        expiresAt: null
-    })
+  const doc = snap.docs[0];
+  await doc.ref.update({
+    status: 'unsubscribed',
+    token: null,
+    tokenExpiresAt: null
+  });
 
-    return res.status(200).json({ message: 'Unsubscribed' })
+  return Response.json({ message: 'Unsubscribed' });
 }

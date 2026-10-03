@@ -1,34 +1,32 @@
-import { VercelRequest, VercelReponse } from '@vercel/node'
-import { subscribers } from '../_lib/firebase.ts'
+import { subscribers } from '../_lib/firebase.js';
 
-export default async function handler(req: VercelRequest, res: VercelReponse) {
-    const token = String(req.query.token ?? '').trim()
+export default async function handler(req: Request): Promise<Response> {
+  const url = new URL(req.url);
+  const token = url.searchParams.get('token')?.trim() ?? '';
 
-    if (!token) {
-        return res.redirect(302, '/confirm-error')
-    }
+  if (!token) {
+    return Response.redirect(new URL('/confirm-error', url.origin), 302);
+  }
 
-    // Find subscriber with this token
-    const snap = await subscribers.where('token', '==', token).limit(1).get()
+  const snap = await subscribers.where('token', '==', token).limit(1).get();
 
-    if (snap.empty) {
-        return res.redirect(302, '/confirm-error')
-    }
+  if (snap.empty) {
+    return Response.redirect(new URL('/confirm-error', url.origin), 302);
+  }
 
-    const doc = snap.docs[0]
-    const data = doc.data()
+  const doc = snap.docs[0];
+  const data = doc.data();
 
-    if (!data.expiresAt || data.expiresAt.toDate().getTime() < Date.now()) {
-        return res.redirect(302, '/confirm-error')
-    }
+  if (!data.tokenExpiresAt || data.tokenExpiresAt.toDate().getTime() < Date.now()) {
+    return Response.redirect(new URL('/confirm-error', url.origin), 302);
+  }
 
-    // Mark verified. clear the token
-    await doc.ref.update({
-        status: 'verified',
-        verifiedAt: new Date(),
-        token: null,
-        expiresAt: null
-    })
+  await doc.ref.update({
+    status: 'verified',
+    verifiedAt: new Date(),
+    token: null,
+    tokenExpiresAt: null
+  });
 
-    return res.redirect(302, '/confirmed')
+  return Response.redirect(new URL('/confirmed', url.origin), 302);
 }
