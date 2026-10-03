@@ -1,4 +1,4 @@
-import { db } from './firebase.ts'
+import { db } from './firebase.js'
 
 export const views = db.collection('views')
 
