@@ -2,7 +2,7 @@ import { db } from './firebase.ts'
 
 export const views = db.collection('views')
 
-export async function incrementView (slug: string): Promise<numner> {
+export async function incrementView (slug: string): Promise<number> {
     const ref = views.doc(slug)
     const snap = await ref.get()
 
