@@ -171,23 +171,51 @@
 })();
 
 // ---------- Newsletter form ----------
-// Placeholder: intercepts submit, shows success, resets.
-// Replace with a real POST to /api/newsletter/subscribe
-// once the backend endpoint exists.
 (function(){
   var form = document.querySelector('.newsletter-form');
   if(!form) return;
 
+  var input = form.querySelector('input[type="email"]');
+  var btn = form.querySelector('button');
+  if(!input || !btn) return;
+
+  var originalText = btn.textContent;
+
   form.addEventListener('submit', function(e){
     e.preventDefault();
-    var btn = form.querySelector('button');
-    var original = btn.textContent;
-    btn.textContent = 'Subscribed ✓';
+
+    var email = input.value.trim();
+    if(!email) return;
+
+    btn.textContent = 'Subscribing…';
     btn.disabled = true;
-    setTimeout(function(){
-      btn.textContent = original;
-      btn.disabled = false;
-      form.reset();
-    }, 2200);
+    input.disabled = true;
+
+    fetch('/api/newsletter/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    })
+      .then(function(res){
+        if(!res.ok) throw new Error('Request failed');
+        return res.json();
+      })
+      .then(function(){
+        btn.textContent = 'Check your inbox';
+        form.reset();
+        setTimeout(function(){
+          btn.textContent = originalText;
+          btn.disabled = false;
+          input.disabled = false;
+        }, 4000);
+      })
+      .catch(function(){
+        btn.textContent = 'Try again';
+        setTimeout(function(){
+          btn.textContent = originalText;
+          btn.disabled = false;
+          input.disabled = false;
+        }, 3000);
+      });
   });
 })();
