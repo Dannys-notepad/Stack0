@@ -13,7 +13,6 @@ const allPosts = (await getCollection('posts', ({ data }) => !data.draft))
 const featured = allPosts.find((post) => post.data.featured) ?? allPosts[0];
 const rest = allPosts.filter((post) => post.id !== featured?.id);
 const pageOne = rest.slice(0, POSTS_PER_PAGE);
-
 const totalPages = Math.ceil(rest.length / POSTS_PER_PAGE);
 ---
 

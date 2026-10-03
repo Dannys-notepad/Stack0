@@ -4,9 +4,9 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import PostCard from '../../components/post/PostCard.astro';
 import Pagination from '../../components/common/Pagination.astro';
 
-const POSTS_PER_PAGE = 10;
-
 export async function getStaticPaths() {
+  const POSTS_PER_PAGE = 10;
+
   const allPosts = (await getCollection('posts', ({ data }) => !data.draft))
     .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
@@ -41,6 +41,7 @@ const { posts, currentPage, totalPages } = Astro.props;
   {posts.map((post) => (
     <PostCard
       href={`/posts/${post.id}`}
+      slug={post.id}
       date={post.data.date}
       category={post.data.category}
       title={post.data.title}
@@ -49,8 +50,8 @@ const { posts, currentPage, totalPages } = Astro.props;
   ))}
 
   <Pagination currentPage={currentPage} totalPages={totalPages} />
-  </BaseLayout>
+</BaseLayout>
 
-  <script>
-    import '../../scripts/views.js'
-  </script>
+<script>
+  import '../../scripts/views.js';
+</script>
