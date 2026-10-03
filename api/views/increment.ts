@@ -1,10 +1,6 @@
 import { incrementView } from '../_lib/views.js';
 
-export default async function handler(req: Request): Promise<Response> {
-  if (req.method !== 'POST') {
-    return Response.json({ error: 'Method not allowed' }, { status: 405 });
-  }
-
+export async function POST(req: Request): Promise<Response> {
   const body = await req.json().catch(() => ({}));
   const slug = String((body as any)?.slug ?? '').trim();
 

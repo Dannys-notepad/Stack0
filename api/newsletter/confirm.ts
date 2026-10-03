@@ -1,6 +1,6 @@
 import { subscribers } from '../_lib/firebase.js';
 
-export default async function handler(req: Request): Promise<Response> {
+export async function GET(req: Request): Promise<Response> {
   const url = new URL(req.url);
   const token = url.searchParams.get('token')?.trim() ?? '';
 

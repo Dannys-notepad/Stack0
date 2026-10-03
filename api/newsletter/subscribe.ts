@@ -4,11 +4,7 @@ import { transport, confirmationEmail } from '../_lib/email.js';
 
 const TOKEN_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
-export default async function handler(req: Request): Promise<Response> {
-  if (req.method !== 'POST') {
-    return Response.json({ error: 'Method not allowed' }, { status: 405 });
-  }
-
+export async function POST(req: Request): Promise<Response> {
   const body = await req.json().catch(() => ({}));
   const email = String((body as any)?.email ?? '').trim().toLowerCase();
 
