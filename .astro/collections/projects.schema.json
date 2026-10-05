@@ -3,10 +3,14 @@
   "type": "object",
   "properties": {
     "title": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
     },
     "description": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300
     },
     "status": {
       "type": "string",
@@ -46,6 +50,9 @@
       "items": {
         "type": "string"
       }
+    },
+    "cover": {
+      "type": "string"
     },
     "featured": {
       "default": false,

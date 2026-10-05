@@ -3,21 +3,44 @@
   "type": "object",
   "properties": {
     "title": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
     },
     "description": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300
     },
     "date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated": {
       "type": "string",
       "format": "date-time"
     },
     "category": {
       "type": "string",
       "enum": [
-        "GO",
-        "JavaScript",
-        "API"
+        "NODE",
+        "TypeScript",
+        "Go",
+        "System",
+        "Debugging",
+        "AI",
+        "Backend",
+        "API",
+        "Database",
+        "DevOps",
+        "Cloud",
+        "Security",
+        "Architecture",
+        "Performance",
+        "Testing",
+        "Frontend",
+        "Tools",
+        "Python"
       ]
     },
     "tags": {
@@ -27,16 +50,64 @@
         "type": "string",
         "enum": [
           "js",
+          "typescript",
+          "node",
+          "express",
           "go",
           "dsa",
           "backend",
           "api-design",
-          "database",
+          "idempotency",
+          "concurrency",
+          "databases",
           "postgres",
+          "firebase",
+          "auth",
+          "security",
+          "testing",
+          "debugging",
+          "architecture",
+          "performance",
+          "ai",
           "devops",
-          "tooling"
+          "tooling",
+          "rest",
+          "graphql",
+          "websockets",
+          "webhooks",
+          "http",
+          "networking",
+          "pagination",
+          "validation",
+          "rate-limiting",
+          "caching",
+          "redis",
+          "queues",
+          "microservices",
+          "system-design",
+          "scaling",
+          "serverless",
+          "cloud",
+          "docker",
+          "linux",
+          "git",
+          "sql",
+          "nosql",
+          "orms",
+          "transactions",
+          "logging",
+          "observability",
+          "error-handling",
+          "authorization",
+          "design-patterns",
+          "clean-code",
+          "frontend",
+          "python"
         ]
       }
+    },
+    "cover": {
+      "type": "string"
     },
     "draft": {
       "default": false,

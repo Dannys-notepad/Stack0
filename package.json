@@ -25,7 +25,6 @@
   "dependencies": {
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.4",
-    "@vercel/node": "^17.0.0",
     "astro": "^7.3.5",
     "firebase-admin": "^14.3.0",
     "nodemailer": "^10.0.10"
