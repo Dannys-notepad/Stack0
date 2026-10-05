@@ -20,7 +20,7 @@ const totalPages = Math.ceil(rest.length / POSTS_PER_PAGE);
   <header class="site-header">
     <img class="about-avatar" src="/assets/img/me.jpg" width="96" height="96" alt="Profile photo">
     <h1 class="hero">Hi, I'm Udeme.</h1>
-    <p class="tagline">I'm a self-taught backend engineer, and a 3rd year Industrial Chemistry student.</p>
+    <p class="tagline">I'm a backend developer, and a 3rd year Industrial Chemistry student.</p>
     <div class="social-links">
       <a href="mailto:etimdnl41@gmail.com" aria-label="Email" title="Email">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 6l10 7 10-7"/></svg>
@@ -52,6 +52,8 @@ const totalPages = Math.ceil(rest.length / POSTS_PER_PAGE);
   {pageOne.map((post) => (
     <PostCard
       href={`/posts/${post.id}`}
+      slug={post.id}
+      slug={post.id}
       date={post.data.date}
       category={post.data.category}
       title={post.data.title}

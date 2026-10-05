@@ -13,7 +13,7 @@ const projects = (await getCollection('projects'))
   });
 ---
 
-<BaseLayout title="About" description={`About ${site.author} — self-taught backend engineer and third-year Industrial Chemistry student.`}>
+<BaseLayout title="About" description={`About ${site.author} — Backend developer and third-year Industrial Chemistry student.`}>
   <BackLink href="/" label="Back to all posts" />
 
   <main>
@@ -21,7 +21,7 @@ const projects = (await getCollection('projects'))
       <img class="about-avatar" src="/assets/img/me.jpg" width="96" height="96" alt="Profile photo">
       <div>
         <h1 class="about-name">{site.author}</h1>
-        <p class="about-role">Self-taught backend engineer · third-year Industrial Chemistry student</p>
+        <p class="about-role">Backend engineer · third-year Industrial Chemistry student</p>
         <div class="social-links">
           <a href={`mailto:${site.social.email}`} aria-label="Email" title="Email">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 6l10 7 10-7"/></svg>
@@ -40,7 +40,7 @@ const projects = (await getCollection('projects'))
     </section>
 
     <div class="prose about-bio">
-      <p>I'm a self-taught backend engineer and a third-year Industrial Chemistry student. </p>
+      <p>I'm a self-taught backend developer and a third-year Industrial Chemistry student. </p>
       <p> I write about backend work, project escapades, and my debugging process.</p>
     </div>
 
@@ -67,9 +67,17 @@ const projects = (await getCollection('projects'))
     <div class="skills-group">
       <div class="skills-group-label">Languages</div>
       <div class="skills-pills">
-        <span>JavaScript</span><span>TypeScript</span><span>PHP</span><span>Go</span>
+        <span>JavaScript</span><span>TypeScript</span><span>Go (Learning)</span>
       </div>
     </div>
+
+    <div class="skills-group">
+      <div class="skills-group-label">Frameworks</div>
+      <div class="skills-pills">
+        <span>Express</span><span>Hono</span>
+      </div>
+    </div>
+
     <div class="skills-group">
       <div class="skills-group-label">Infra &amp; data</div>
       <div class="skills-pills">
@@ -79,6 +87,7 @@ const projects = (await getCollection('projects'))
 
     <h2 class="section-title">Get in touch</h2>
     <div class="prose">
+      <p> I'm comfortable in JavaScript, but never limited to it, I learn what the project needs, and I learn it fast. </p>
       <p>Open to backend roles, freelance work, and interesting conversations. The fastest way to reach me is <a href={`mailto:${site.social.email}`}>email</a>, or you can find me on <a href={site.social.x}>X</a> and <a href={site.social.github}>GitHub</a>.</p>
     </div>
   </main>

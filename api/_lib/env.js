@@ -32,11 +32,11 @@ export const env = {
         privateKey: process.env.FIREBASE_PRIVATE_KEY
     },
     smtp: {
-        host: process.env.SMTP_HOST,
-        port: Number(process.env.SMTP_PORT),
+        host: process.env.SMTP_HOST || process.env.SMPT_HOST,
+        port: Number(process.env.SMTP_PORT || process.env.SMPT_PORT),
         user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-        from: process.env.SMTP_FROM
+        pass: process.env.SMTP_PASS || process.env.SMPT_PASS,
+        from: process.env.SMTP_FROM || process.env.SMPT_FROM
     }
 }
 

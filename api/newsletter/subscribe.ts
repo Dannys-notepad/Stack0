@@ -1,4 +1,5 @@
 import { randomBytes } from 'node:crypto';
+import { env } from '../_lib/env.js';
 import { subscribers } from '../_lib/firebase.js';
 import { transport, confirmationEmail } from '../_lib/email.js';
 
@@ -31,7 +32,7 @@ export async function POST(req: Request): Promise<Response> {
 
   try {
     await transport.sendMail({
-      from: process.env.SMTP_FROM!,
+      from: env.smtp.from!,
       to: email,
       subject: 'Confirm your Stack0 subscription',
       html: confirmationEmail(token)
