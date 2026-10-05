@@ -43,7 +43,7 @@ body{
   padding: 0 var(--page-pad-x) var(--page-pad-x);
   min-height: 100vh;
   position: relative;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* ---------- Accessibility ---------- */

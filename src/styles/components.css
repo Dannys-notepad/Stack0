@@ -15,8 +15,8 @@
   padding: 0.9rem var(--page-pad-x) 0;
   background: transparent;
   border-bottom: 1px solid var(--frame-line);
-  backdrop-filter: blur(32px);
-  -webkit-backdrop-filter: blur(32px);
+  backdrop-filter: blur(48px);
+  -webkit-backdrop-filter: blur(48px);
 }
 
 .top-bar-inner{
