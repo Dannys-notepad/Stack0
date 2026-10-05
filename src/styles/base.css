@@ -40,7 +40,7 @@ body{
   font-size: 15.5px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  padding: var(--page-pad-x);
+  padding: 0 var(--page-pad-x) var(--page-pad-x);
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;

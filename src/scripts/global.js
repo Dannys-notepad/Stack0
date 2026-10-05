@@ -65,6 +65,45 @@
   }, { passive: true });
 })();
 
+// ---------- Back-to-top scroll ----------
+(function(){
+  var link = document.getElementById('back-to-top');
+  if(!link) return;
+
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var animationFrame = null;
+
+  link.addEventListener('click', function(e){
+    if(reduceMotion){
+      window.scrollTo(0, 0);
+      return;
+    }
+
+    e.preventDefault();
+    if(animationFrame) cancelAnimationFrame(animationFrame);
+
+    var startY = window.scrollY;
+    var startTime = null;
+    var duration = 1200;
+
+    function step(timestamp){
+      if(startTime === null) startTime = timestamp;
+      var progress = Math.min((timestamp - startTime) / duration, 1);
+      var easedProgress = 1 - Math.pow(1 - progress, 3);
+      window.scrollTo(0, startY * (1 - easedProgress));
+
+      if(progress < 1){
+        animationFrame = requestAnimationFrame(step);
+      } else {
+        animationFrame = null;
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+      }
+    }
+
+    animationFrame = requestAnimationFrame(step);
+  });
+})();
+
 // ---------- Hamburger menu ----------
 (function(){
   var wrap = document.getElementById('hamburgerWrap');

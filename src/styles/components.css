@@ -13,9 +13,10 @@
   z-index: 50;
   margin: 0 calc(-1 * var(--page-pad-x));
   padding: 0.9rem var(--page-pad-x) 0;
-  background: rgba(10, 10, 10, 0.85);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(5, 5, 5, 0.98);
+  border-bottom: 1px solid var(--frame-line);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .top-bar-inner{
@@ -25,7 +26,6 @@
   max-width: var(--frame-outer-w);
   margin: 0 auto;
   padding: 0 var(--frame-inset-x) 0.9rem;
-  border-bottom: 1px solid var(--frame-line);
 }
 
 /* ---------- Page frame ---------- */
