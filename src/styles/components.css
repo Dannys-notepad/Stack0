@@ -13,7 +13,7 @@
   z-index: 50;
   margin: 0 calc(-1 * var(--page-pad-x));
   padding: 0.9rem var(--page-pad-x) 0;
-  background: transparent;
+  background: var(--bg);
   border-bottom: 1px solid var(--frame-line);
   backdrop-filter: blur(48px);
   -webkit-backdrop-filter: blur(48px);
