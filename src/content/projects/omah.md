@@ -1,14 +1,13 @@
 ---
 title: "Omah"
 description: "A personal cloud coding agent that runs on GitHub Actions — submit a repo and a task from your phone, get a pull request back for review. Never merges."
-status: "active"
+status: "wip"
 startDate: 2026-10-07
 endDate: null
 repo: "https://github.com/Dannys-notepad/omah"
-live: null
-stack: ["TypeScript", "Node.js", "GitHub Actions", "Gemini API", "Groq", "Mistral", "NVIDIA", "Poolside", "Requesty"]
+stack: ["TypeScript", "Node.js", "GitHub Actions"]
 featured: true
-order: 2
+order: 3
 openSource: true
 ---
 
